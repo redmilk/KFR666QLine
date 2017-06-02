@@ -21,9 +21,11 @@ class MakeClassicTriviaViewCtrl: UIViewController, UIImagePickerControllerDelega
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     
     fileprivate var rightAnswerIndex: Int = 0
-    fileprivate var rightAnswerString: String?
+    fileprivate var rightAnswerString: String = ""
     
-    var imagePicker = UIImagePickerController()
+    fileprivate var imagePicker = UIImagePickerController()
+    
+    fileprivate var gradient = CAGradientLayer()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,7 +33,8 @@ class MakeClassicTriviaViewCtrl: UIViewController, UIImagePickerControllerDelega
         let tapGestureRecognizer = UITapGestureRecognizer(target:self, action:#selector(imageViewTapped(img:)))
         imageView.isUserInteractionEnabled = true
         imageView.addGestureRecognizer(tapGestureRecognizer)
-
+        
+        AppDelegate.instance().setupGradient(gradient: gradient, viewForGradient: self.view, color2: .blue, color1: .white)
     }
     
     func imageViewTapped(img: AnyObject) {
@@ -69,11 +72,14 @@ class MakeClassicTriviaViewCtrl: UIViewController, UIImagePickerControllerDelega
         }
     }
     @IBAction func doneButtonPressed(_ sender: UIButton) {
-        if imageView.image != UIImage(named: "photoalbum") /*&& answer1TextField.text != nil && answer2TextField.text != nil && answer3TextField.text != nil && answer4TextField.text != nil && rightAnswerString != nil */ {
-            let classicTrivia = ClassicTrivia(image: imageView.image!, questionTitle: questionHeaderTextField.text, rightAnswer: rightAnswerString!, date: Date(timeIntervalSinceNow: 0), answer1: answer1TextField.text!, answer2: answer2TextField.text!, answer3: answer3TextField.text!, answer4: answer4TextField.text!)
+        if imageView.image != UIImage(named: "photoalbum") && answer1TextField.text != nil && answer2TextField.text != nil && answer3TextField.text != nil && answer4TextField.text != nil && rightAnswerString != "" {
+            let classicTrivia = ClassicTrivia(image: imageView.image!, questionTitle: questionHeaderTextField.text, rightAnswer: rightAnswerString, date: Date(timeIntervalSinceNow: 0), answer1: answer1TextField.text!, answer2: answer2TextField.text!, answer3: answer3TextField.text!, answer4: answer4TextField.text!)
             Generator_.classicTriviaPosts.append(classicTrivia)
             self.dismiss(animated: false, completion: nil)
         }
+    }
+    @IBAction func closeButton(_ sender: UIButton) {
+        self.dismiss(animated: false, completion: nil)
     }
     
 }

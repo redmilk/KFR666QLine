@@ -119,9 +119,8 @@
 		AC1AD3371E37C6E90062EFD1 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				AC18999B1EE09B630054C913 /* GuillotineMenuTransitionAnimation.swift */,
-				AC1899931EE099C60054C913 /* MenuViewController.swift */,
 				AC24CC2F1E46652700E3331C /* CollectionViewController.swift */,
+				AC1899931EE099C60054C913 /* MenuViewController.swift */,
 				ACF03AA11EDFF81700B0ED13 /* CLASSICTRIVIA */,
 				AC13117A1EDF3FD6007F3123 /* TRUEFALSE */,
 				AC1311751EDF36D0007F3123 /* VERSUS */,
@@ -150,7 +149,6 @@
 		AC1AD3421E37FEDA0062EFD1 /* Misc */ = {
 			isa = PBXGroup;
 			children = (
-				ACDB7A1C1E3766C90052D834 /* AppDelegate.swift */,
 				ACDB7A251E3766C90052D834 /* Assets.xcassets */,
 				AC4A52A81E381085008971FC /* GoogleService-Info.plist */,
 				ACDB7A271E3766C90052D834 /* LaunchScreen.storyboard */,
@@ -164,6 +162,7 @@
 		AC1AD3431E37FFAD0062EFD1 /* Objects */ = {
 			isa = PBXGroup;
 			children = (
+				AC18999B1EE09B630054C913 /* GuillotineMenuTransitionAnimation.swift */,
 				AC24CC331E466A9900E3331C /* NSObject+IGListDiffable.swift */,
 				AC24CC311E466A6900E3331C /* DateSortable.swift */,
 			);
@@ -200,8 +199,9 @@
 			isa = PBXGroup;
 			children = (
 				AC1AD3431E37FFAD0062EFD1 /* Objects */,
-				ACDB7A221E3766C90052D834 /* Main.storyboard */,
 				AC1AD3421E37FEDA0062EFD1 /* Misc */,
+				ACDB7A221E3766C90052D834 /* Main.storyboard */,
+				ACDB7A1C1E3766C90052D834 /* AppDelegate.swift */,
 				AC1AD3391E37C7D70062EFD1 /* Cells */,
 				AC24CC371E46725000E3331C /* DataModels */,
 				AC1AD3371E37C6E90062EFD1 /* Controllers */,
@@ -493,7 +493,7 @@
 				DEVELOPMENT_TEAM = 5P72TYW9D4;
 				INFOPLIST_FILE = chatdpua/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = chatdpua;
+				PRODUCT_BUNDLE_IDENTIFIER = QuizLine;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "chatdpua/chatdpua-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -511,7 +511,7 @@
 				DEVELOPMENT_TEAM = 5P72TYW9D4;
 				INFOPLIST_FILE = chatdpua/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = chatdpua;
+				PRODUCT_BUNDLE_IDENTIFIER = QuizLine;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "chatdpua/chatdpua-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;

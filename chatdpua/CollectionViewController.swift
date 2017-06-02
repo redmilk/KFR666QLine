@@ -43,6 +43,11 @@ class CollectionViewController: UIViewController {
     @IBOutlet weak var collectionView: IGListCollectionView!
     
     fileprivate lazy var presentationAnimator = GuillotineTransitionAnimation()
+    fileprivate var gradient = CAGradientLayer()
+    
+    override func viewWillAppear(_ animated: Bool) {
+        //AppDelegate.instance().setupGradient(gradient: gradient, viewForGradient: collectionView, color2: .green, color1: .white)
+    }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
@@ -57,26 +62,33 @@ class CollectionViewController: UIViewController {
         
         //generator delegate
         Generator_.delegate = self
+        //collectionView.backgroundColor = UIColor(patternImage: UIImage(named: "space")!)
         
-        
+        let imageView = UIImageView(frame: self.view.frame)
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.image = UIImage(named: "space")!
         //self.generator.versusPosts.append(vsPost)
+        self.view.addSubview(imageView)
+        
+        imageView.layer.zPosition = -10
+        
+        let width = NSLayoutConstraint(item: imageView, attribute: .width, relatedBy: .equal, toItem: self.view, attribute: .width, multiplier: 1.0, constant: 0.0)
+        let height = NSLayoutConstraint(item: imageView, attribute: .height, relatedBy: .equal, toItem: self.view, attribute: .height, multiplier: 1.0, constant: 0.0)
+        let x = NSLayoutConstraint(item: imageView, attribute: .centerX, relatedBy: .equal, toItem: self.view, attribute: .centerX, multiplier: 1.0, constant: 0.0)
+        let y = NSLayoutConstraint(item: imageView, attribute: .centerY, relatedBy: .equal, toItem: self.view, attribute: .centerY, multiplier: 1.0, constant: 0.0)
+        
+        NSLayoutConstraint.activate([width, height, x, y])
+        
         
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         collectionView.frame = view.bounds
-        collectionView.backgroundColor = UIColor.black
-    }
-    
-    
-    func addVersus() {
-        // add versus code
-       
     }
     
     @IBAction func addVersusPostButton(_ sender: UIBarButtonItem) {
-        addVersus()
     }
     
     @IBAction func plusPressed(_ sender: UIButton) {
@@ -100,6 +112,7 @@ class CollectionViewController: UIViewController {
     }
     
 }
+
 
 // ////////////////// DELEG ///////////////////////
 extension CollectionViewController: IGListAdapterDataSource {

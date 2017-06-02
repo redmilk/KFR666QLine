@@ -9,7 +9,6 @@ pod "PCLBlurEffectAlert"
   # Pods for chatdpua
 
 pod 'IGListKit', '~> 2.0.0'
-pod 'ChameleonFramework/Swift', :git => 'https://github.com/ViccAlexander/Chameleon.git'
 pod 'GuillotineMenu', '~> 3.0'
 
 end

@@ -77,6 +77,9 @@ class MakeVSViewController: UIViewController, UIImagePickerControllerDelegate, U
         self.dismiss(animated: true, completion: nil)
     }
     
+    @IBAction func closeButton(_ sender: UIButton) {
+        self.dismiss(animated: false, completion: nil)
+    }
     @IBAction func doneButtonPressed(_ sender: UIButton) {
         // MARK: - done button (saving)
         // id tekushego yuzera

@@ -16,11 +16,11 @@ class ClassicTriviaCell: UICollectionViewCell {
     @IBOutlet weak var answer2: UIButton!
     @IBOutlet weak var answer3: UIButton!
     @IBOutlet weak var answer4: UIButton!
-    
-    
+    @IBOutlet weak var containerView: UIView!
     
     var currentQuestion: ClassicTrivia!
     
+    var gradient = CAGradientLayer()
     
     override func awakeFromNib() {
         super.awakeFromNib()

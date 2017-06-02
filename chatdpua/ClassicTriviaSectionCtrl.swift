@@ -12,11 +12,13 @@ import UIKit
 class ClassicTriviaSectionCtrl : IGListSectionController {
     var classicTriviaPost: ClassicTrivia!
     
+    
     override init() {
         super.init()
         inset = UIEdgeInsets(top: 0, left: 0, bottom: 15, right: 0)
     }
 }
+
 
 extension ClassicTriviaSectionCtrl : IGListSectionType {
     func numberOfItems() -> Int {
@@ -42,4 +44,5 @@ extension ClassicTriviaSectionCtrl : IGListSectionType {
     }
     func didSelectItem(at index: Int) {
     }
+    
 }

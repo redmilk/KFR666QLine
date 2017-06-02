@@ -4,11 +4,6 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>ChameleonFramework.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>GuillotineMenu.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -32,7 +27,7 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>76BD4592010354D6C23D6ECCA20D83A8</key>
+		<key>3A5B195B03A5E69893D6DC9E20092E4E</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -43,11 +38,6 @@
 			<true/>
 		</dict>
 		<key>9D781EB30AA915DF5F4DD7F2BB2A2CA3</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>C9363D0D7F17A561AD97704374EC7D71</key>
 		<dict>
 			<key>primary</key>
 			<true/>

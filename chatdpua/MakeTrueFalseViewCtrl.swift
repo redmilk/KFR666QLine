@@ -16,6 +16,8 @@ class MakeTrueFalseViewCtrl: UIViewController, UIImagePickerControllerDelegate, 
     @IBOutlet weak var switcherIndicatorLabel: UILabel!
     var imagePicker = UIImagePickerController()
     
+    var gradient = CAGradientLayer()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -23,6 +25,8 @@ class MakeTrueFalseViewCtrl: UIViewController, UIImagePickerControllerDelegate, 
         let tapGestureRecognizer = UITapGestureRecognizer(target:self, action:#selector(imageViewTapped(img:)))
         imageView.isUserInteractionEnabled = true
         imageView.addGestureRecognizer(tapGestureRecognizer)
+        
+        AppDelegate.instance().setupGradient(gradient: gradient, viewForGradient: self.view, color2: .blue, color1: .white)
     }
 
     func imageViewTapped(img: AnyObject) {
@@ -54,4 +58,7 @@ class MakeTrueFalseViewCtrl: UIViewController, UIImagePickerControllerDelegate, 
         switcherIndicatorLabel.text = switcher.isOn ? "TRUE" : "FALSE"
     }
 
+    @IBAction func closeButton(_ sender: UIButton) {
+        self.dismiss(animated: false, completion: nil)
+    }
 }
