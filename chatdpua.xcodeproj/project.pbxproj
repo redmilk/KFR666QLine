@@ -1,0 +1,545 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		7C04FB2B7D32F65664AB119A /* Pods_chatdpua.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC38585C744FF3E295F8FEEF /* Pods_chatdpua.framework */; };
+		AC1311741EDF2F1B007F3123 /* VersusCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC1311731EDF2F1B007F3123 /* VersusCell.swift */; };
+		AC1311771EDF37F9007F3123 /* TrueFalseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC1311761EDF37F9007F3123 /* TrueFalseCell.swift */; };
+		AC1311791EDF3E1E007F3123 /* TrueFalse.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC1311781EDF3E1E007F3123 /* TrueFalse.swift */; };
+		AC13117C1EDF4010007F3123 /* TrueFalseSectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC13117B1EDF4010007F3123 /* TrueFalseSectionController.swift */; };
+		AC1311801EDF5D27007F3123 /* MakeTrueFalseViewCtrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC13117F1EDF5D27007F3123 /* MakeTrueFalseViewCtrl.swift */; };
+		AC1899941EE099C60054C913 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC1899931EE099C60054C913 /* MenuViewController.swift */; };
+		AC18999C1EE09B630054C913 /* GuillotineMenuTransitionAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC18999B1EE09B630054C913 /* GuillotineMenuTransitionAnimation.swift */; };
+		AC18999E1EE09F910054C913 /* ic_menu@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = AC18999D1EE09F910054C913 /* ic_menu@3x.png */; };
+		AC24CC301E46652700E3331C /* CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC24CC2F1E46652700E3331C /* CollectionViewController.swift */; };
+		AC24CC321E466A6900E3331C /* DateSortable.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC24CC311E466A6900E3331C /* DateSortable.swift */; };
+		AC24CC341E466A9900E3331C /* NSObject+IGListDiffable.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC24CC331E466A9900E3331C /* NSObject+IGListDiffable.swift */; };
+		AC24CC361E466F5F00E3331C /* VersusSectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC24CC351E466F5F00E3331C /* VersusSectionController.swift */; };
+		AC24CC391E46728C00E3331C /* Generator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC24CC381E46728C00E3331C /* Generator.swift */; };
+		AC4A52A91E381085008971FC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AC4A52A81E381085008971FC /* GoogleService-Info.plist */; };
+		ACDB7A1D1E3766C90052D834 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACDB7A1C1E3766C90052D834 /* AppDelegate.swift */; };
+		ACDB7A241E3766C90052D834 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ACDB7A221E3766C90052D834 /* Main.storyboard */; };
+		ACDB7A261E3766C90052D834 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ACDB7A251E3766C90052D834 /* Assets.xcassets */; };
+		ACDB7A291E3766C90052D834 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ACDB7A271E3766C90052D834 /* LaunchScreen.storyboard */; };
+		ACE209451E3B9EC900663FF1 /* Versus.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACE209441E3B9EC900663FF1 /* Versus.swift */; };
+		ACE209471E3BB3A400663FF1 /* MakeVSViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACE209461E3BB3A400663FF1 /* MakeVSViewController.swift */; };
+		ACF03AA31EDFF87B00B0ED13 /* ClassicTrivia.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF03AA21EDFF87B00B0ED13 /* ClassicTrivia.swift */; };
+		ACF03AA51EDFF9F700B0ED13 /* ClassicTriviaSectionCtrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF03AA41EDFF9F700B0ED13 /* ClassicTriviaSectionCtrl.swift */; };
+		ACF03AA71EDFFB4D00B0ED13 /* ClassicTriviaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF03AA61EDFFB4D00B0ED13 /* ClassicTriviaCell.swift */; };
+		ACF03AA91EDFFF7D00B0ED13 /* MakeClassicTriviaViewCtrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACF03AA81EDFFF7D00B0ED13 /* MakeClassicTriviaViewCtrl.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		1A73DBE94E7E8DB02D0B99E8 /* Pods-chatdpua.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-chatdpua.debug.xcconfig"; path = "Pods/Target Support Files/Pods-chatdpua/Pods-chatdpua.debug.xcconfig"; sourceTree = "<group>"; };
+		9380F1FCC8B244C55F01C1F6 /* Pods-chatdpua.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-chatdpua.release.xcconfig"; path = "Pods/Target Support Files/Pods-chatdpua/Pods-chatdpua.release.xcconfig"; sourceTree = "<group>"; };
+		AC1311731EDF2F1B007F3123 /* VersusCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VersusCell.swift; sourceTree = "<group>"; };
+		AC1311761EDF37F9007F3123 /* TrueFalseCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrueFalseCell.swift; sourceTree = "<group>"; };
+		AC1311781EDF3E1E007F3123 /* TrueFalse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrueFalse.swift; sourceTree = "<group>"; };
+		AC13117B1EDF4010007F3123 /* TrueFalseSectionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrueFalseSectionController.swift; sourceTree = "<group>"; };
+		AC13117F1EDF5D27007F3123 /* MakeTrueFalseViewCtrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MakeTrueFalseViewCtrl.swift; sourceTree = "<group>"; };
+		AC1899931EE099C60054C913 /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
+		AC18999B1EE09B630054C913 /* GuillotineMenuTransitionAnimation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GuillotineMenuTransitionAnimation.swift; sourceTree = "<group>"; };
+		AC18999D1EE09F910054C913 /* ic_menu@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_menu@3x.png"; sourceTree = "<group>"; };
+		AC24CC2C1E465C4200E3331C /* chatdpua-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "chatdpua-Bridging-Header.h"; sourceTree = "<group>"; };
+		AC24CC2F1E46652700E3331C /* CollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; };
+		AC24CC311E466A6900E3331C /* DateSortable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateSortable.swift; sourceTree = "<group>"; };
+		AC24CC331E466A9900E3331C /* NSObject+IGListDiffable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+IGListDiffable.swift"; sourceTree = "<group>"; };
+		AC24CC351E466F5F00E3331C /* VersusSectionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VersusSectionController.swift; sourceTree = "<group>"; };
+		AC24CC381E46728C00E3331C /* Generator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Generator.swift; sourceTree = "<group>"; };
+		AC4A52A81E381085008971FC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		ACDB7A191E3766C90052D834 /* chatdpua.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = chatdpua.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		ACDB7A1C1E3766C90052D834 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		ACDB7A231E3766C90052D834 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		ACDB7A251E3766C90052D834 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		ACDB7A281E3766C90052D834 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		ACDB7A2A1E3766C90052D834 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		ACE209441E3B9EC900663FF1 /* Versus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Versus.swift; sourceTree = "<group>"; };
+		ACE209461E3BB3A400663FF1 /* MakeVSViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MakeVSViewController.swift; sourceTree = "<group>"; };
+		ACF03AA21EDFF87B00B0ED13 /* ClassicTrivia.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClassicTrivia.swift; sourceTree = "<group>"; };
+		ACF03AA41EDFF9F700B0ED13 /* ClassicTriviaSectionCtrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClassicTriviaSectionCtrl.swift; sourceTree = "<group>"; };
+		ACF03AA61EDFFB4D00B0ED13 /* ClassicTriviaCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClassicTriviaCell.swift; sourceTree = "<group>"; };
+		ACF03AA81EDFFF7D00B0ED13 /* MakeClassicTriviaViewCtrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MakeClassicTriviaViewCtrl.swift; sourceTree = "<group>"; };
+		FC38585C744FF3E295F8FEEF /* Pods_chatdpua.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_chatdpua.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		ACDB7A161E3766C90052D834 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7C04FB2B7D32F65664AB119A /* Pods_chatdpua.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		8A5E3DA9E01CD8ACFA1FFDD5 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				1A73DBE94E7E8DB02D0B99E8 /* Pods-chatdpua.debug.xcconfig */,
+				9380F1FCC8B244C55F01C1F6 /* Pods-chatdpua.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		9C2C88FD85BF7ED584A55786 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FC38585C744FF3E295F8FEEF /* Pods_chatdpua.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		AC1311751EDF36D0007F3123 /* VERSUS */ = {
+			isa = PBXGroup;
+			children = (
+				ACE209441E3B9EC900663FF1 /* Versus.swift */,
+				AC24CC351E466F5F00E3331C /* VersusSectionController.swift */,
+				ACE209461E3BB3A400663FF1 /* MakeVSViewController.swift */,
+			);
+			name = VERSUS;
+			sourceTree = "<group>";
+		};
+		AC13117A1EDF3FD6007F3123 /* TRUEFALSE */ = {
+			isa = PBXGroup;
+			children = (
+				AC1311781EDF3E1E007F3123 /* TrueFalse.swift */,
+				AC13117B1EDF4010007F3123 /* TrueFalseSectionController.swift */,
+				AC13117F1EDF5D27007F3123 /* MakeTrueFalseViewCtrl.swift */,
+			);
+			name = TRUEFALSE;
+			sourceTree = "<group>";
+		};
+		AC1AD3371E37C6E90062EFD1 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				AC18999B1EE09B630054C913 /* GuillotineMenuTransitionAnimation.swift */,
+				AC1899931EE099C60054C913 /* MenuViewController.swift */,
+				AC24CC2F1E46652700E3331C /* CollectionViewController.swift */,
+				ACF03AA11EDFF81700B0ED13 /* CLASSICTRIVIA */,
+				AC13117A1EDF3FD6007F3123 /* TRUEFALSE */,
+				AC1311751EDF36D0007F3123 /* VERSUS */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+		AC1AD3381E37C7320062EFD1 /* wtf */ = {
+			isa = PBXGroup;
+			children = (
+				ACDB7A1B1E3766C90052D834 /* chatdpua */,
+			);
+			name = wtf;
+			sourceTree = "<group>";
+		};
+		AC1AD3391E37C7D70062EFD1 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				AC1311731EDF2F1B007F3123 /* VersusCell.swift */,
+				AC1311761EDF37F9007F3123 /* TrueFalseCell.swift */,
+				ACF03AA61EDFFB4D00B0ED13 /* ClassicTriviaCell.swift */,
+			);
+			name = Cells;
+			sourceTree = "<group>";
+		};
+		AC1AD3421E37FEDA0062EFD1 /* Misc */ = {
+			isa = PBXGroup;
+			children = (
+				ACDB7A1C1E3766C90052D834 /* AppDelegate.swift */,
+				ACDB7A251E3766C90052D834 /* Assets.xcassets */,
+				AC4A52A81E381085008971FC /* GoogleService-Info.plist */,
+				ACDB7A271E3766C90052D834 /* LaunchScreen.storyboard */,
+				ACDB7A2A1E3766C90052D834 /* Info.plist */,
+				AC24CC2C1E465C4200E3331C /* chatdpua-Bridging-Header.h */,
+				AC18999D1EE09F910054C913 /* ic_menu@3x.png */,
+			);
+			name = Misc;
+			sourceTree = "<group>";
+		};
+		AC1AD3431E37FFAD0062EFD1 /* Objects */ = {
+			isa = PBXGroup;
+			children = (
+				AC24CC331E466A9900E3331C /* NSObject+IGListDiffable.swift */,
+				AC24CC311E466A6900E3331C /* DateSortable.swift */,
+			);
+			name = Objects;
+			sourceTree = "<group>";
+		};
+		AC24CC371E46725000E3331C /* DataModels */ = {
+			isa = PBXGroup;
+			children = (
+				AC24CC381E46728C00E3331C /* Generator.swift */,
+			);
+			name = DataModels;
+			sourceTree = "<group>";
+		};
+		ACDB7A101E3766C90052D834 = {
+			isa = PBXGroup;
+			children = (
+				AC1AD3381E37C7320062EFD1 /* wtf */,
+				ACDB7A1A1E3766C90052D834 /* Products */,
+				8A5E3DA9E01CD8ACFA1FFDD5 /* Pods */,
+				9C2C88FD85BF7ED584A55786 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		ACDB7A1A1E3766C90052D834 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				ACDB7A191E3766C90052D834 /* chatdpua.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		ACDB7A1B1E3766C90052D834 /* chatdpua */ = {
+			isa = PBXGroup;
+			children = (
+				AC1AD3431E37FFAD0062EFD1 /* Objects */,
+				ACDB7A221E3766C90052D834 /* Main.storyboard */,
+				AC1AD3421E37FEDA0062EFD1 /* Misc */,
+				AC1AD3391E37C7D70062EFD1 /* Cells */,
+				AC24CC371E46725000E3331C /* DataModels */,
+				AC1AD3371E37C6E90062EFD1 /* Controllers */,
+			);
+			path = chatdpua;
+			sourceTree = "<group>";
+		};
+		ACF03AA11EDFF81700B0ED13 /* CLASSICTRIVIA */ = {
+			isa = PBXGroup;
+			children = (
+				ACF03AA21EDFF87B00B0ED13 /* ClassicTrivia.swift */,
+				ACF03AA41EDFF9F700B0ED13 /* ClassicTriviaSectionCtrl.swift */,
+				ACF03AA81EDFFF7D00B0ED13 /* MakeClassicTriviaViewCtrl.swift */,
+			);
+			name = CLASSICTRIVIA;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		ACDB7A181E3766C90052D834 /* chatdpua */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = ACDB7A2D1E3766C90052D834 /* Build configuration list for PBXNativeTarget "chatdpua" */;
+			buildPhases = (
+				FBC2BAE769A13E0E37FCEFD2 /* [CP] Check Pods Manifest.lock */,
+				ACDB7A151E3766C90052D834 /* Sources */,
+				ACDB7A161E3766C90052D834 /* Frameworks */,
+				ACDB7A171E3766C90052D834 /* Resources */,
+				B024B2CD1A14307671708ACD /* [CP] Embed Pods Frameworks */,
+				9F8C7833D22608C5F3B40EBD /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = chatdpua;
+			productName = chatdpua;
+			productReference = ACDB7A191E3766C90052D834 /* chatdpua.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		ACDB7A111E3766C90052D834 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0820;
+				LastUpgradeCheck = 0820;
+				ORGANIZATIONNAME = ApiqA;
+				TargetAttributes = {
+					ACDB7A181E3766C90052D834 = {
+						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = 5P72TYW9D4;
+						LastSwiftMigration = 0820;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = ACDB7A141E3766C90052D834 /* Build configuration list for PBXProject "chatdpua" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = ACDB7A101E3766C90052D834;
+			productRefGroup = ACDB7A1A1E3766C90052D834 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				ACDB7A181E3766C90052D834 /* chatdpua */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		ACDB7A171E3766C90052D834 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AC4A52A91E381085008971FC /* GoogleService-Info.plist in Resources */,
+				ACDB7A291E3766C90052D834 /* LaunchScreen.storyboard in Resources */,
+				ACDB7A261E3766C90052D834 /* Assets.xcassets in Resources */,
+				ACDB7A241E3766C90052D834 /* Main.storyboard in Resources */,
+				AC18999E1EE09F910054C913 /* ic_menu@3x.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		9F8C7833D22608C5F3B40EBD /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-chatdpua/Pods-chatdpua-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B024B2CD1A14307671708ACD /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-chatdpua/Pods-chatdpua-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FBC2BAE769A13E0E37FCEFD2 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		ACDB7A151E3766C90052D834 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AC24CC361E466F5F00E3331C /* VersusSectionController.swift in Sources */,
+				ACF03AA91EDFFF7D00B0ED13 /* MakeClassicTriviaViewCtrl.swift in Sources */,
+				AC18999C1EE09B630054C913 /* GuillotineMenuTransitionAnimation.swift in Sources */,
+				AC1311791EDF3E1E007F3123 /* TrueFalse.swift in Sources */,
+				AC1311741EDF2F1B007F3123 /* VersusCell.swift in Sources */,
+				ACF03AA71EDFFB4D00B0ED13 /* ClassicTriviaCell.swift in Sources */,
+				ACF03AA31EDFF87B00B0ED13 /* ClassicTrivia.swift in Sources */,
+				ACF03AA51EDFF9F700B0ED13 /* ClassicTriviaSectionCtrl.swift in Sources */,
+				AC24CC341E466A9900E3331C /* NSObject+IGListDiffable.swift in Sources */,
+				AC1311801EDF5D27007F3123 /* MakeTrueFalseViewCtrl.swift in Sources */,
+				AC1311771EDF37F9007F3123 /* TrueFalseCell.swift in Sources */,
+				AC24CC301E46652700E3331C /* CollectionViewController.swift in Sources */,
+				AC13117C1EDF4010007F3123 /* TrueFalseSectionController.swift in Sources */,
+				AC24CC321E466A6900E3331C /* DateSortable.swift in Sources */,
+				AC1899941EE099C60054C913 /* MenuViewController.swift in Sources */,
+				ACDB7A1D1E3766C90052D834 /* AppDelegate.swift in Sources */,
+				AC24CC391E46728C00E3331C /* Generator.swift in Sources */,
+				ACE209471E3BB3A400663FF1 /* MakeVSViewController.swift in Sources */,
+				ACE209451E3B9EC900663FF1 /* Versus.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		ACDB7A221E3766C90052D834 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				ACDB7A231E3766C90052D834 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		ACDB7A271E3766C90052D834 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				ACDB7A281E3766C90052D834 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		ACDB7A2B1E3766C90052D834 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		ACDB7A2C1E3766C90052D834 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		ACDB7A2E1E3766C90052D834 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1A73DBE94E7E8DB02D0B99E8 /* Pods-chatdpua.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				DEVELOPMENT_TEAM = 5P72TYW9D4;
+				INFOPLIST_FILE = chatdpua/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = chatdpua;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "chatdpua/chatdpua-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		ACDB7A2F1E3766C90052D834 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9380F1FCC8B244C55F01C1F6 /* Pods-chatdpua.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				DEVELOPMENT_TEAM = 5P72TYW9D4;
+				INFOPLIST_FILE = chatdpua/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = chatdpua;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "chatdpua/chatdpua-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		ACDB7A141E3766C90052D834 /* Build configuration list for PBXProject "chatdpua" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ACDB7A2B1E3766C90052D834 /* Debug */,
+				ACDB7A2C1E3766C90052D834 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		ACDB7A2D1E3766C90052D834 /* Build configuration list for PBXNativeTarget "chatdpua" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ACDB7A2E1E3766C90052D834 /* Debug */,
+				ACDB7A2F1E3766C90052D834 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = ACDB7A111E3766C90052D834 /* Project object */;
+}
