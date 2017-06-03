@@ -96,7 +96,7 @@ class MenuViewController: UIViewController, GuillotineMenu {
         presentingViewController!.dismiss(animated: true, completion: nil)
     }
     @IBAction func plusTrueFalse(_ sender: UIButton) {
-         Generator_.trueFalsePosts.append(TrueFalse(UIImage(named: "1")!, "This is my picture, isn't it?", true, Date(timeIntervalSinceNow: -100)))
+         Generator_.trueFalsePosts.append(TrueFalse(UIImage(named: "1")!, "This is my picture, isn't it?", true, Date(timeIntervalSinceNow: 0)))
         presentingViewController!.dismiss(animated: true, completion: nil)
     }
     
