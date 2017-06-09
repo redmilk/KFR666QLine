@@ -10,6 +10,8 @@ import UIKit
 
 class VersusCell: UICollectionViewCell {
     
+    var currentQuestion: Versus!
+    
     @IBOutlet weak var imageOne: UIImageView!
     @IBOutlet weak var imageTwo: UIImageView!
     @IBOutlet weak var headerLabel: UILabel!
@@ -19,7 +21,29 @@ class VersusCell: UICollectionViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        imageOne.image = UIImage(named: "photoalbum")
-        imageTwo.image = UIImage(named: "photoalbum")
+        let tapGestureRecognizerOne = UITapGestureRecognizer(target:self, action:#selector(imageOneTapped(img:)))
+        let tapGestureRecognizerTwo = UITapGestureRecognizer(target:self, action:#selector(imageTwoTapped(img:)))
+        imageOne.isUserInteractionEnabled = true
+        imageTwo.isUserInteractionEnabled = true
+        imageOne.addGestureRecognizer(tapGestureRecognizerOne)
+        imageTwo.addGestureRecognizer(tapGestureRecognizerTwo)
+    }
+    
+    func imageOneTapped(img: AnyObject) {
+        print("image One tapped")
+        let index = Generator_.versusPosts.index(of: currentQuestion!)
+        if let index = index {
+            Generator_.versusPosts.remove(at: index)
+        }
+
+    }
+    
+    func imageTwoTapped(img: AnyObject) {
+        print("image Two tapped")
+        let index = Generator_.versusPosts.index(of: currentQuestion!)
+        if let index = index {
+            Generator_.versusPosts.remove(at: index)
+        }
+
     }
 }

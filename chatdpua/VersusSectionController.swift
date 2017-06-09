@@ -33,6 +33,8 @@ extension VersusSectionController: IGListSectionType {
         cell.imageOne.image = self.versusPost.image1
         cell.imageTwo.image = self.versusPost.image2
         
+        cell.currentQuestion = versusPost
+        
         return cell
     }
     func didUpdate(to object: Any) {

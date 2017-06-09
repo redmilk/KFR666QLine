@@ -26,7 +26,7 @@ class MakeTrueFalseViewCtrl: UIViewController, UIImagePickerControllerDelegate, 
         imageView.isUserInteractionEnabled = true
         imageView.addGestureRecognizer(tapGestureRecognizer)
         
-        AppDelegate.instance().setupGradient(gradient: gradient, viewForGradient: self.view, color2: .blue, color1: .white)
+        //AppDelegate.instance().setupGradient(gradient: gradient, viewForGradient: self.view, color2: .blue, color1: .white)
     }
 
     func imageViewTapped(img: AnyObject) {

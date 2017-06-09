@@ -23,7 +23,6 @@ class TrueFalseCell: UICollectionViewCell {
     fileprivate func initNewQuestionNoAnimation(newQuestion: TrueFalse?) {
         if let newQuestion = newQuestion {
             currentQuestion = newQuestion
-            
         }
     }
     

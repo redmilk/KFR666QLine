@@ -7,21 +7,21 @@
 	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
 	<string>ca-app-pub-3940256099942544/4411468910</string>
 	<key>CLIENT_ID</key>
-	<string>961875994636-dfu6ofq9t349l40spffu2ja5jarjkdqm.apps.googleusercontent.com</string>
+	<string>654722882052-qkjijn7q9m1osru0grsehidg35ueaq6q.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.961875994636-dfu6ofq9t349l40spffu2ja5jarjkdqm</string>
+	<string>com.googleusercontent.apps.654722882052-qkjijn7q9m1osru0grsehidg35ueaq6q</string>
 	<key>API_KEY</key>
-	<string>AIzaSyAhkPs5uOsDjIh0BA5K0YIaTLQtpzrar7Q</string>
+	<string>AIzaSyDxZIeGPC86UH-vJ_OtKxrWOmZsnoWl_HU</string>
 	<key>GCM_SENDER_ID</key>
-	<string>961875994636</string>
+	<string>654722882052</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>pq.chatdpua</string>
+	<string>UniverseQuiz</string>
 	<key>PROJECT_ID</key>
-	<string>chatdpua</string>
+	<string>universequiz-11e9b</string>
 	<key>STORAGE_BUCKET</key>
-	<string>chatdpua.appspot.com</string>
+	<string>universequiz-11e9b.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<true/>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -33,8 +33,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true/>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:961875994636:ios:01986c3a7fd17f2a</string>
+	<string>1:654722882052:ios:a97546e105070ff5</string>
 	<key>DATABASE_URL</key>
-	<string>https://chatdpua.firebaseio.com</string>
+	<string>https://universequiz-11e9b.firebaseio.com</string>
 </dict>
 </plist>

@@ -27,7 +27,8 @@ class MakeVSViewController: UIViewController, UIImagePickerControllerDelegate, U
     
     var appendAndReloadClosure: ((_ vsPost: Versus) -> ())!
 
-    var gradient: CAGradientLayer!
+    var gradient = CAGradientLayer()
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,14 +44,13 @@ class MakeVSViewController: UIViewController, UIImagePickerControllerDelegate, U
         imageViewTwo.addGestureRecognizer(tapGestureRecognizerTwo)
         
         
-        gradient = CAGradientLayer()
         gradient.colors = [UIColor.blue.cgColor, UIColor.white.cgColor]
         gradient.locations = [0.0 , 1.0]
         gradient.startPoint = CGPoint(x: 0.0, y: 1.0)
         gradient.endPoint = CGPoint(x: 1.0, y: 1.0)
         gradient.frame = CGRect(x: 0.0, y: 0.0, width: self.view.frame.size.width, height: self.view.frame.size.height)
         gradient.zPosition = -10
-        self.view.layer.addSublayer(gradient)
+        //self.view.layer.addSublayer(gradient)
         
     }
     
