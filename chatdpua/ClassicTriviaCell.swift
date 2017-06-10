@@ -63,6 +63,10 @@ class ClassicTriviaCell: UICollectionViewCell {
         
         let uid = Auth.auth().currentUser!.uid
         let answeredUserID: [String : Any] = [uid : true]
+        
+        print(currentQuestion.postID! + "<<<<<<<<<< ------------------ ::::::::::::")
+        
+        
         DataBaseWithPosts.child(currentQuestion.postID!).child("usersAnswerRight").updateChildValues(answeredUserID)
         let answeredPostID: [String : Any] = [currentQuestion.postID! : true]
         // if there is current user in current post' list of users who answered right

@@ -53,6 +53,7 @@ class CollectionViewController: UIViewController {
     fileprivate var gradient = CAGradientLayer()
     fileprivate var retrievedCount: Double = 0
     fileprivate var uid: String!
+    fileprivate var startValue: Double = 0
     
     var dataBaseHandle: DatabaseHandle?
     
@@ -116,7 +117,10 @@ class CollectionViewController: UIViewController {
         
         // MARK: -View Did Load
         
-        getAllQuestionsFromServer()
+        //getAllQuestionsFromServer()
+        //getQuestionsSolvedByCurrentUser()
+        //getMostLikedQuestions()
+        getMostLikedQuestionsNotSolvedByCurrentUser()
     }
     
     override func viewDidLayoutSubviews() {
@@ -124,23 +128,18 @@ class CollectionViewController: UIViewController {
         collectionView.frame = view.bounds
     }
     
-    fileprivate func getQuestionsInRatingOrder() {
-        
-    }
     
-    fileprivate func getAmountOfLastQuestion() {
+    fileprivate func getAmountOfLastUnsolvedQuestion() {
         
     }
     
     
     // MARK: - TOP LIKED NO SOLVED
-    fileprivate func getMostLikedQuestionsNotSolvedByCurrentUser()
-    {
+    fileprivate func getMostLikedQuestionsNotSolvedByCurrentUser() { /// ready to use
         Generator_.classicTriviaPosts.removeAll()
         Generator_.trueFalsePosts.removeAll()
         Generator_.versusPosts.removeAll()
         
-        //self.adapter.performUpdates(animated: true, completion: nil)
         
         DataBaseRef.child("posts").queryOrdered(byChild: "likesCount").queryStarting(atValue: "1").observeSingleEvent(of: .value, with: { (snapshot) in
             
@@ -149,6 +148,16 @@ class CollectionViewController: UIViewController {
             }
             
             let questions = snapshot.value as! [String : AnyObject]
+            
+            let questionsCount = Double(questions.count)
+            var counter = questions.count - 1 //because there is deafult empty value in database
+            guard counter != 0 else {
+                AppDelegate.instance().showAlert(title: "Empty", msg: "Sorry, you solved all top liked questions :)")
+                return
+            }
+            AppDelegate.instance().showProgressIndicator()
+            
+
             for(_, value) in questions {
                 
                 if let retrievedQuestion = value as? [String : Any] {
@@ -162,6 +171,10 @@ class CollectionViewController: UIViewController {
                                 // if user already solved this question break
                                 if let usersWhoFinishedThisQuestion = retrievedQuestion["usersAnswerRight"] as? [String : Any] {
                                     if let _ = usersWhoFinishedThisQuestion[self.uid] as? Bool {
+                                        counter -= 1
+                                        if counter <= 0 {
+                                            self.retrieveComplete()
+                                        }
                                         break
                                     }
                                 }
@@ -173,21 +186,24 @@ class CollectionViewController: UIViewController {
                                 let urlToImage = URL(string: pathToImage)
                                 guard urlToImage != nil else {
                                     print("BAD URL LINK !!!!!!!")
-                                    return }
-                                /////////////////
+                                    return
+                                }
+                                
                                 cache.retrieveImage(forKey: pathToImage, options: nil, completionHandler: { (image_, cacheType) in
                                     if let image_ = image_ {
+                                        counter -= 1
                                         //CIRCLE PROGRESS
-                                        //progress.angle = self.addToStartValue(add: 360/self.retrievedCount)
-                                        
+                                        ProgressIndicator.angle = self.addToStartValue(add: 360/questionsCount)
+
                                         print("EXIST IN CACHE")
                                         /*** if image in Cach make new TheFightersQuestion object ****/
                                         
                                         let classic = ClassicTrivia(image: image_, questionTitle: header, rightAnswer: rightAnswer, date: date, answer1: answer1, answer2: answer2, answer3: answer3, answer4: answer4, isLikedByCurrentUser: false, postID: postID)
                                         
                                         Generator_.classicTriviaPosts.append(classic)
-                                        
-                                        //if question more than one
+                                        if counter <= 0 {
+                                            self.retrieveComplete()
+                                        }
                                     } else {    /*** No Cached ****/
                                         print("NOT exist in cache.")
                                         /*** if no in Cache we download ****/
@@ -200,15 +216,17 @@ class CollectionViewController: UIViewController {
                                             /*** if image download suceed cache it and make new TheFightersQuestion object ****/
                                             if let image = image {
                                                 print("NEW IMAGE DOWNLOADED")
+                                                counter -= 1
                                                 //CIRCLE PROGRESS
-                                                //progress.angle = self.addToStartValue(add: 360/self.retrievedCount)
-                                                
+                                                ProgressIndicator.angle = self.addToStartValue(add: 360/questionsCount)
+
                                                 cache.store(image, forKey: pathToImage)
                                                 
                                                 let classic = ClassicTrivia(image: image, questionTitle: header, rightAnswer: rightAnswer, date: date, answer1: answer1, answer2: answer2, answer3: answer3, answer4: answer4, isLikedByCurrentUser: false, postID: postID)
                                                 Generator_.classicTriviaPosts.append(classic)
-                                                
-                                                //self.adapter.performUpdates(animated: true, completion: nil)
+                                                if counter <= 0 {
+                                                    self.retrieveComplete()
+                                                }
                                             }
                                         })
                                     }
@@ -229,12 +247,10 @@ class CollectionViewController: UIViewController {
     }
     
     // MARK: - TOP LIKED
-    fileprivate func getMostLikedQuestions() {
+    fileprivate func getMostLikedQuestions() { /// ready to use
         Generator_.classicTriviaPosts.removeAll()
         Generator_.trueFalsePosts.removeAll()
         Generator_.versusPosts.removeAll()
-        
-        //self.adapter.performUpdates(animated: true, completion: nil)
         
         DataBaseRef.child("posts").queryOrdered(byChild: "likesCount").queryStarting(atValue: "1").observeSingleEvent(of: .value, with: { (snapshot) in
             
@@ -243,6 +259,16 @@ class CollectionViewController: UIViewController {
             }
             
             let questions = snapshot.value as! [String : AnyObject]
+            
+            let questionsCount = Double(questions.count)
+            var counter = questions.count - 1 //because there is deafult empty value in database
+            guard counter != 0 else {
+                AppDelegate.instance().showAlert(title: "No Likes", msg: "Sorry, there is no questions liked by you")
+                return
+            }
+            AppDelegate.instance().showProgressIndicator()
+
+            
             for(_, value) in questions {
                 
                 if let retrievedQuestion = value as? [String : Any] {
@@ -264,18 +290,20 @@ class CollectionViewController: UIViewController {
                                 /////////////////
                                 cache.retrieveImage(forKey: pathToImage, options: nil, completionHandler: { (image_, cacheType) in
                                     if let image_ = image_ {
+                                        counter -= 1
                                         //CIRCLE PROGRESS
-                                        //progress.angle = self.addToStartValue(add: 360/self.retrievedCount)
-                                        
+                                        ProgressIndicator.angle = self.addToStartValue(add: 360/questionsCount)
+
                                         print("EXIST IN CACHE")
                                         /*** if image in Cach make new TheFightersQuestion object ****/
                                         
                                         let classic = ClassicTrivia(image: image_, questionTitle: header, rightAnswer: rightAnswer, date: date, answer1: answer1, answer2: answer2, answer3: answer3, answer4: answer4, isLikedByCurrentUser: false, postID: postID)
                                         
                                         Generator_.classicTriviaPosts.append(classic)
-                                        
-                                        //if question more than one
-                                    } else {    /*** No Cached ****/
+                                        if counter <= 0 {
+                                            self.retrieveComplete()
+                                        }
+                                    } else {    /*** If No Cached ****/
                                         print("NOT exist in cache.")
                                         /*** if no in Cache we download ****/
                                         downloader.downloadImage(with: urlToImage!, options: nil, progressBlock: nil, completionHandler: { (image, error, url, originalData) in
@@ -287,15 +315,17 @@ class CollectionViewController: UIViewController {
                                             /*** if image download suceed cache it and make new TheFightersQuestion object ****/
                                             if let image = image {
                                                 print("NEW IMAGE DOWNLOADED")
+                                                counter -= 1
                                                 //CIRCLE PROGRESS
-                                                //progress.angle = self.addToStartValue(add: 360/self.retrievedCount)
-                                                
+                                                ProgressIndicator.angle = self.addToStartValue(add: 360/questionsCount)
+
                                                 cache.store(image, forKey: pathToImage)
                                                 
                                                 let classic = ClassicTrivia(image: image, questionTitle: header, rightAnswer: rightAnswer, date: date, answer1: answer1, answer2: answer2, answer3: answer3, answer4: answer4, isLikedByCurrentUser: false, postID: postID)
                                                 Generator_.classicTriviaPosts.append(classic)
-                                                
-                                                //self.adapter.performUpdates(animated: true, completion: nil)
+                                                if counter <= 0 {
+                                                    self.retrieveComplete()
+                                                }
                                             }
                                         })
                                     }
@@ -315,13 +345,24 @@ class CollectionViewController: UIViewController {
         DataBaseRef.removeAllObservers()
     }
     // MARK: - LIKED BY ME
-    fileprivate func getQuestionLikedByCurrentUser() {
+    fileprivate func getQuestionLikedByCurrentUser() { /// ready to use
+        print("____getQuestionLikedByCurrentUser____")
+
         Generator_.classicTriviaPosts.removeAll()
         Generator_.trueFalsePosts.removeAll()
         Generator_.versusPosts.removeAll()
         
         DataBaseWithPosts.queryOrderedByKey().observeSingleEvent(of: .value, with: { (snapshot) in
             let questions = snapshot.value as! [String : AnyObject]
+            
+            let questionsCount = Double(questions.count)
+            var counter = questions.count - 1 //because there is deafult empty value in database
+            guard counter != 0 else {
+                AppDelegate.instance().showAlert(title: "No Likes", msg: "Sorry, there is no questions liked by you")
+                return
+            }
+            AppDelegate.instance().showProgressIndicator()
+
             for(_, value) in questions {
                 
                 if let retrievedQuestion = value as? [String : Any] {
@@ -334,7 +375,13 @@ class CollectionViewController: UIViewController {
                                 
                                 // check if current user liked this post
                                 DataBaseRef.child("likes").child(postID).child(self.uid).queryOrderedByKey().observeSingleEvent(of: .value, with: { (snapshot) in
-                                    
+                                    guard snapshot.exists() else {
+                                        counter -= 1
+                                        if counter <= 0 {
+                                            self.retrieveComplete()
+                                        }
+                                        return
+                                    }
                                     if let _ = snapshot.value as? Bool {
                                         //this user liked the question
                                         
@@ -349,17 +396,19 @@ class CollectionViewController: UIViewController {
                                         /////////////////
                                         cache.retrieveImage(forKey: pathToImage, options: nil, completionHandler: { (image_, cacheType) in
                                             if let image_ = image_ {
-                                                //print("EXIST in cache.")
+                                                counter -= 1
                                                 //CIRCLE PROGRESS
-                                                //progress.angle = self.addToStartValue(add: 360/self.retrievedCount)
-                                                
+                                                ProgressIndicator.angle = self.addToStartValue(add: 360/questionsCount)
+
                                                 print("EXIST IN CACHE")
                                                 /*** if image in Cach make new TheFightersQuestion object ****/
                                                 
                                                 let classic = ClassicTrivia(image: image_, questionTitle: header, rightAnswer: rightAnswer, date: date, answer1: answer1, answer2: answer2, answer3: answer3, answer4: answer4, isLikedByCurrentUser: false, postID: postID)
                                                 
                                                 Generator_.classicTriviaPosts.append(classic)
-                                                
+                                                if counter <= 0 {
+                                                    self.retrieveComplete()
+                                                }
                                                 //if question more than one
                                             } else {    /*** No Cached ****/
                                                 print("NOT exist in cache.")
@@ -368,22 +417,255 @@ class CollectionViewController: UIViewController {
                                                     if error != nil {
                                                         print(error!.localizedDescription)
                                                         self.noInternetConnectionError()
-                                                        /***/ //MARK: - !<esli zagruzit ne udalos to...>!
                                                     }
                                                     /*** if image download suceed cache it and make new TheFightersQuestion object ****/
                                                     if let image = image {
                                                         print("NEW IMAGE DOWNLOADED")
+                                                        counter -= 1
                                                         //CIRCLE PROGRESS
-                                                        //progress.angle = self.addToStartValue(add: 360/self.retrievedCount)
+                                                        ProgressIndicator.angle = self.addToStartValue(add: 360/questionsCount)
                                                         
                                                         cache.store(image, forKey: pathToImage)
                                                         
                                                         let classic = ClassicTrivia(image: image, questionTitle: header, rightAnswer: rightAnswer, date: date, answer1: answer1, answer2: answer2, answer3: answer3, answer4: answer4, isLikedByCurrentUser: false, postID: postID)
                                                         Generator_.classicTriviaPosts.append(classic)
-                                                        
-                                                        //self.adapter.performUpdates(animated: true, completion: nil)
+                                                        if counter <= 0 {
+                                                            self.retrieveComplete()
+                                                        }
                                                     }
                                                 })
+                                            }
+                                        })
+                                    } else {
+                                        counter -= 1
+                                        if counter <= 0 {
+                                            self.retrieveComplete()
+                                        }
+                                    }
+                                })
+                            }
+                            break
+                        case "TRUEFALSE": break
+                        case "VERSUS": break
+                        default: break
+                        }
+                    }
+                }
+            }
+        })
+        DataBaseRef.removeAllObservers()
+    }
+    
+    // MARK: - SOLVED BY USER
+    fileprivate func getQuestionsSolvedByCurrentUser() { /// ready to use
+        print("____getQuestionsSolvedByCurrentUser____")
+        Generator_.classicTriviaPosts.removeAll()
+        Generator_.trueFalsePosts.removeAll()
+        Generator_.versusPosts.removeAll()
+        
+        DataBaseWithPosts.queryOrderedByKey().observeSingleEvent(of: .value, with: { (snapshot) in
+            guard snapshot.exists() else {
+                return
+            }
+            let questions = snapshot.value as! [String : AnyObject]
+            
+            let questionsCount = Double(questions.count)
+            var counter = questions.count - 1 //because there is deafult empty value in database
+            guard counter != 0 else {
+                AppDelegate.instance().showAlert(title: "Empty", msg: "There is no questions, answered by you")
+                return
+            }
+            AppDelegate.instance().showProgressIndicator()
+            
+            for(_, value) in questions {
+                
+                if let retrievedQuestion = value as? [String : Any] {
+                    
+                    if let type = retrievedQuestion["quizType"] as? String {
+                        switch type {
+                        case "CLASSIC":
+                            
+                            // if this question has users who solved it
+                            if let usersWhoFinishedThisQuestion = retrievedQuestion["usersAnswerRight"] as? [String : Any] {
+                                // if current user solved this question already we go in
+                                if let _ = usersWhoFinishedThisQuestion[self.uid] as? Bool {
+                                    
+                                    if let header = retrievedQuestion["questionHeader"] as? String, let answer1 = retrievedQuestion["answer1"] as? String, let answer2 = retrievedQuestion["answer2"] as? String, let answer3 = retrievedQuestion["answer3"] as? String, let answer4 = retrievedQuestion["answer4"] as? String, let rightAnswer = retrievedQuestion["rightAnswer"] as? String, let pathToImage = retrievedQuestion["pathToImage"] as? String, let dateString = retrievedQuestion["date"] as? String, let postID = retrievedQuestion["postID"] as? String {
+                                        
+                                        
+                                        let formatter = DateFormatter()
+                                        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                                        let date = formatter.date(from: dateString)!
+                                        //url only latin symbols
+                                        let urlToImage = URL(string: pathToImage)
+                                        guard urlToImage != nil else {
+                                            AppDelegate.instance().showAlert(title: "Error", msg: "Bad URL")
+                                            return
+                                        }
+                                        /////////////////
+                                        cache.retrieveImage(forKey: pathToImage, options: nil, completionHandler: { (image_, cacheType) in
+                                            if let image_ = image_ {
+                                                counter -= 1
+                                                //CIRCLE PROGRESS
+                                                ProgressIndicator.angle = self.addToStartValue(add: 360/questionsCount)
+                                                
+                                                print("EXIST IN CACHE")
+                                                /*** if image in Cach make new TheFightersQuestion object ****/
+                                                
+                                                let classic = ClassicTrivia(image: image_, questionTitle: header, rightAnswer: rightAnswer, date: date, answer1: answer1, answer2: answer2, answer3: answer3, answer4: answer4, isLikedByCurrentUser: false, postID: postID)
+                                                
+                                                Generator_.classicTriviaPosts.append(classic)
+                                                if counter <= 0 {
+                                                    self.retrieveComplete()
+                                                }
+                                                //if question more than one
+                                            } else {    /*** No Cached ****/
+                                                print("NOT exist in cache.")
+                                                /*** if no in Cache we download ****/
+                                                downloader.downloadImage(with: urlToImage!, options: nil, progressBlock: nil, completionHandler: { (image, error, url, originalData) in
+                                                    if error != nil {
+                                                        print(error!.localizedDescription)
+                                                        self.noInternetConnectionError()
+                                                        AppDelegate.instance().dismissProgressIndicator()
+                                                        /***/ //MARK: - !<esli zagruzit ne udalos to...>!
+                                                    }
+                                                    /*** if image download suceed cache it and make new TheFightersQuestion object ****/
+                                                    if let image = image {
+                                                        counter -= 1
+                                                        print("NEW IMAGE DOWNLOADED")
+                                                        //CIRCLE PROGRESS
+                                                        ProgressIndicator.angle = self.addToStartValue(add: 360/questionsCount)
+                                                        
+                                                        cache.store(image, forKey: pathToImage)
+                                                        
+                                                        let classic = ClassicTrivia(image: image, questionTitle: header, rightAnswer: rightAnswer, date: date, answer1: answer1, answer2: answer2, answer3: answer3, answer4: answer4, isLikedByCurrentUser: false, postID: postID)
+                                                        Generator_.classicTriviaPosts.append(classic)
+                                                        if counter <= 0 {
+                                                            self.retrieveComplete()
+                                                        }
+                                                    }
+                                                })
+                                            }
+                                        })
+                                    }
+                                } else { // this user didnt answer this question (we need user's solved questions)
+                                    // there is no our user in current questions 'usersWhoAnsweredRight'
+                                    counter -= 1
+                                    if counter <= 0 {
+                                        self.retrieveComplete()
+                                    }
+                                    break
+                                }
+                            } else { // this question doesn't have 'usersWhoAnsweredRight' at all
+                                counter -= 1
+                                if counter <= 0 {
+                                    self.retrieveComplete()
+                                }
+                                break
+                            }
+                            break
+                        case "TRUEFALSE": break
+                        case "VERSUS": break
+                        default: break
+                        }
+                    }
+                }
+            }
+        })
+        DataBaseRef.removeAllObservers()
+    }
+    
+    // MARK: - NOT SOLVED
+    fileprivate func getQuestionsNotSolvedByCurrentUser() { /// ready to use
+        print("\n_____getQuestionsNotSolvedByCurrentUser_____")
+        Generator_.classicTriviaPosts.removeAll()
+        Generator_.trueFalsePosts.removeAll()
+        Generator_.versusPosts.removeAll()
+                
+        DataBaseWithPosts.queryOrderedByKey().observeSingleEvent(of: .value, with: { (snapshot) in
+            guard snapshot.exists() else {
+                return
+            }
+            let questions = snapshot.value as! [String : AnyObject]
+            let questionsCount = Double(questions.count)
+            var counter = questions.count - 1 //because there is deafult empty value in database
+            guard counter != 0 else {
+                AppDelegate.instance().showAlert(title: "Empty", msg: "There is no questions for you. You solved them all, You are smart!")
+                return
+            }
+            AppDelegate.instance().showProgressIndicator()
+            
+            for(_, value) in questions {
+                
+                if let retrievedQuestion = value as? [String : Any] {
+                    
+                    if let type = retrievedQuestion["quizType"] as? String {
+                        switch type {
+                        case "CLASSIC":
+                            
+                            if let header = retrievedQuestion["questionHeader"] as? String, let answer1 = retrievedQuestion["answer1"] as? String, let answer2 = retrievedQuestion["answer2"] as? String, let answer3 = retrievedQuestion["answer3"] as? String, let answer4 = retrievedQuestion["answer4"] as? String, let rightAnswer = retrievedQuestion["rightAnswer"] as? String, let pathToImage = retrievedQuestion["pathToImage"] as? String, let dateString = retrievedQuestion["date"] as? String, let postID = retrievedQuestion["postID"] as? String  {
+                                
+                                if let usersWhoFinishedThisQuestion = retrievedQuestion["usersAnswerRight"] as? [String : Any] {
+                                    if let _ = usersWhoFinishedThisQuestion[self.uid] as? Bool {
+                                        counter -= 1
+                                        if counter <= 0 {
+                                            self.retrieveComplete()
+                                        }
+                                        break
+                                    }
+                                }
+                                
+                                let formatter = DateFormatter()
+                                formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                                let date = formatter.date(from: dateString)!
+                                //url only latin symbols
+                                let urlToImage = URL(string: pathToImage)
+                                guard urlToImage != nil else {
+                                    AppDelegate.instance().showAlert(title: "Error", msg: "Bad URL")
+                                    AppDelegate.instance().dismissProgressIndicator()
+                                    return
+                                }
+                                
+                                cache.retrieveImage(forKey: pathToImage, options: nil, completionHandler: { (image_, cacheType) in
+                                    if let image_ = image_ {
+                                        
+                                        
+                                        counter -= 1
+                                        //CIRCLE PROGRESS
+                                        ProgressIndicator.angle = self.addToStartValue(add: 360/questionsCount)
+                                        
+                                        print("questionType: CLASSIC, header: \(header), rightAnswer: \(rightAnswer):::EXIST IN CACHE")
+                                        /*** if image in Cach make new TheFightersQuestion object ****/
+                                        
+                                        let classic = ClassicTrivia(image: image_, questionTitle: header, rightAnswer: rightAnswer, date: date, answer1: answer1, answer2: answer2, answer3: answer3, answer4: answer4, postID: postID)
+                                        
+                                        Generator_.classicTriviaPosts.append(classic)
+                                        if counter <= 0 {
+                                            self.retrieveComplete()
+                                        }
+                                        //if question more than one
+                                    } else {    /*** No Cached ****/
+                                        print("Current question Image doesn't exist in cache. Start downloading....")
+                                        downloader.downloadImage(with: urlToImage!, options: nil, progressBlock: nil, completionHandler: { (image, error, url, originalData) in
+                                            if error != nil {
+                                                print(error!.localizedDescription)
+                                                self.noInternetConnectionError()
+                                            }
+                                            /*** if image download suceed cache it and make new Question object ****/
+                                            if let image = image {
+                                                
+                                                counter -= 1
+                                                print("NEW IMAGE DOWNLOADED")
+                                                //CIRCLE PROGRESS
+                                                ProgressIndicator.angle = self.addToStartValue(add: 360/questionsCount)
+                                                cache.store(image, forKey: pathToImage)
+                                                let classic = ClassicTrivia(image: image, questionTitle: header, rightAnswer: rightAnswer, date: date, answer1: answer1, answer2: answer2, answer3: answer3, answer4: answer4, postID: postID)
+                                                Generator_.classicTriviaPosts.append(classic)
+                                                
+                                                print("66666666666666666 counter's current value is \(counter)")
+                                                if counter <= 0 {
+                                                    self.retrieveComplete()
+                                                }
                                             }
                                         })
                                     }
@@ -400,187 +682,25 @@ class CollectionViewController: UIViewController {
         })
         DataBaseRef.removeAllObservers()
     }
-    
-    // MARK: - ALL SOLVED
-    fileprivate func getQuestionsSolvedByCurrentUser() {
-        
-        Generator_.classicTriviaPosts.removeAll()
-        Generator_.trueFalsePosts.removeAll()
-        Generator_.versusPosts.removeAll()
-        
-        // add child scan
-        dataBaseHandle = Database.database().reference().child("posts").observe(.childAdded, with: { (snapshot) -> Void in
-            // get snapshot value
-            if let retrievedQuestion = snapshot.value as? [String : Any] {
-                //if snapshot value has quizType propertie
-                if let type = retrievedQuestion["quizType"] as? String {
-                    switch type {
-                    // if question Type is CLassic
-                    case "CLASSIC":
-                        // if this question has users who solved it
-                        if let usersWhoFinishedThisQuestion = retrievedQuestion["usersAnswerRight"] as? [String : Any] {
-                            // if current user solved this question already we go out
-                            if let _ = usersWhoFinishedThisQuestion[self.uid] as? Bool {
-                                
-                                if let header = retrievedQuestion["questionHeader"] as? String, let answer1 = retrievedQuestion["answer1"] as? String, let answer2 = retrievedQuestion["answer2"] as? String, let answer3 = retrievedQuestion["answer3"] as? String, let answer4 = retrievedQuestion["answer4"] as? String, let rightAnswer = retrievedQuestion["rightAnswer"] as? String, let pathToImage = retrievedQuestion["pathToImage"] as? String, let dateString = retrievedQuestion["date"] as? String, let postID = retrievedQuestion["postID"] as? String {
-                                    
-                                    
-                                    let formatter = DateFormatter()
-                                    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                                    let date = formatter.date(from: dateString)!
-                                    //url only latin symbols
-                                    let urlToImage = URL(string: pathToImage)
-                                    guard urlToImage != nil else {
-                                        print("BAD URL LINK !!!!!!!")
-                                        return }
-                                    /////////////////
-                                    cache.retrieveImage(forKey: pathToImage, options: nil, completionHandler: { (image_, cacheType) in
-                                        if let image_ = image_ {
-                                            //print("EXIST in cache.")
-                                            //CIRCLE PROGRESS
-                                            //progress.angle = self.addToStartValue(add: 360/self.retrievedCount)
-                                            
-                                            print("EXIST IN CACHE")
-                                            /*** if image in Cach make new TheFightersQuestion object ****/
-                                            
-                                            let classic = ClassicTrivia(image: image_, questionTitle: header, rightAnswer: rightAnswer, date: date, answer1: answer1, answer2: answer2, answer3: answer3, answer4: answer4, isLikedByCurrentUser: false, postID: postID)
-                                            
-                                            Generator_.classicTriviaPosts.append(classic)
-                                            
-                                            //if question more than one
-                                        } else {    /*** No Cached ****/
-                                            print("NOT exist in cache.")
-                                            /*** if no in Cache we download ****/
-                                            downloader.downloadImage(with: urlToImage!, options: nil, progressBlock: nil, completionHandler: { (image, error, url, originalData) in
-                                                if error != nil {
-                                                    print(error!.localizedDescription)
-                                                    self.noInternetConnectionError()
-                                                    /***/ //MARK: - !<esli zagruzit ne udalos to...>!
-                                                }
-                                                /*** if image download suceed cache it and make new TheFightersQuestion object ****/
-                                                if let image = image {
-                                                    print("NEW IMAGE DOWNLOADED")
-                                                    //CIRCLE PROGRESS
-                                                    //progress.angle = self.addToStartValue(add: 360/self.retrievedCount)
-                                                    
-                                                    cache.store(image, forKey: pathToImage)
-                                                    
-                                                    let classic = ClassicTrivia(image: image, questionTitle: header, rightAnswer: rightAnswer, date: date, answer1: answer1, answer2: answer2, answer3: answer3, answer4: answer4, isLikedByCurrentUser: false, postID: postID)
-                                                    Generator_.classicTriviaPosts.append(classic)
-                                                    
-                                                    //self.adapter.performUpdates(animated: true, completion: nil)
-                                                }
-                                            })
-                                        }
-                                    })
-                                    
-                                    
-                                    /*** if no in Cache we download ****/
-                                    break
-                                }
-                                
-                                break
-                            }
-                        }
-                        
-                    case "TRUEFALSE": break
-                    case "VERSUS": break
-                    default: break
-                    }
-                }
-            }
-        })
-    }
-    // MARK: - ALL NOT SOLVED
-    fileprivate func getQuestionsNotSolvedByCurrentUser() {
-        
-        Generator_.classicTriviaPosts.removeAll()
-        Generator_.trueFalsePosts.removeAll()
-        Generator_.versusPosts.removeAll()
-        
-        dataBaseHandle = Database.database().reference().child("posts").observe(.childAdded, with: { (snapshot) -> Void in
-            if let retrievedQuestion = snapshot.value as? [String : Any] {
-                if let type = retrievedQuestion["quizType"] as? String {
-                    switch type {
-                    case "CLASSIC":
-                        if let header = retrievedQuestion["questionHeader"] as? String, let answer1 = retrievedQuestion["answer1"] as? String, let answer2 = retrievedQuestion["answer2"] as? String, let answer3 = retrievedQuestion["answer3"] as? String, let answer4 = retrievedQuestion["answer4"] as? String, let rightAnswer = retrievedQuestion["rightAnswer"] as? String, let pathToImage = retrievedQuestion["pathToImage"] as? String, let dateString = retrievedQuestion["date"] as? String, let postID = retrievedQuestion["postID"] as? String {
-                            
-                            if let usersWhoFinishedThisQuestion = retrievedQuestion["usersAnswerRight"] as? [String : Any] {
-                                if let _ = usersWhoFinishedThisQuestion[self.uid] as? Bool {
-                                    break
-                                }
-                            }
-                            
-                            let formatter = DateFormatter()
-                            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                            let date = formatter.date(from: dateString)!
-                            //url only latin symbols
-                            let urlToImage = URL(string: pathToImage)
-                            guard urlToImage != nil else {
-                                print("BAD URL LINK !!!!!!!")
-                                return }
-                            /////////////////
-                            cache.retrieveImage(forKey: pathToImage, options: nil, completionHandler: { (image_, cacheType) in
-                                if let image_ = image_ {
-                                    //print("EXIST in cache.")
-                                    //CIRCLE PROGRESS
-                                    //progress.angle = self.addToStartValue(add: 360/self.retrievedCount)
-                                    
-                                    print("EXIST IN CACHE")
-                                    /*** if image in Cach make new TheFightersQuestion object ****/
-                                    
-                                    let classic = ClassicTrivia(image: image_, questionTitle: header, rightAnswer: rightAnswer, date: date, answer1: answer1, answer2: answer2, answer3: answer3, answer4: answer4, isLikedByCurrentUser: false, postID: postID)
-                                    
-                                    Generator_.classicTriviaPosts.append(classic)
-                                    
-                                    //if question more than one
-                                } else {    /*** No Cached ****/
-                                    print("NOT exist in cache.")
-                                    /*** if no in Cache we download ****/
-                                    downloader.downloadImage(with: urlToImage!, options: nil, progressBlock: nil, completionHandler: { (image, error, url, originalData) in
-                                        if error != nil {
-                                            print(error!.localizedDescription)
-                                            self.noInternetConnectionError()
-                                            /***/ //MARK: - !<esli zagruzit ne udalos to...>!
-                                        }
-                                        /*** if image download suceed cache it and make new TheFightersQuestion object ****/
-                                        if let image = image {
-                                            print("NEW IMAGE DOWNLOADED")
-                                            //CIRCLE PROGRESS
-                                            //progress.angle = self.addToStartValue(add: 360/self.retrievedCount)
-                                            
-                                            cache.store(image, forKey: pathToImage)
-                                            
-                                            let classic = ClassicTrivia(image: image, questionTitle: header, rightAnswer: rightAnswer, date: date, answer1: answer1, answer2: answer2, answer3: answer3, answer4: answer4, isLikedByCurrentUser: false, postID: postID)
-                                            Generator_.classicTriviaPosts.append(classic)
-                                            
-                                            //self.adapter.performUpdates(animated: true, completion: nil)
-                                        }
-                                    })
-                                }
-                            })
-                            
-                            
-                            /*** if no in Cache we download ****/
-                            break
-                        }
-                    case "TRUEFALSE": break
-                    case "VERSUS": break
-                    default: break
-                    }
-                }
-            }
-        })
-    }
     // MARK: - GET ALL
-    fileprivate func getAllQuestionsFromServer() {
+    fileprivate func getAllQuestionsFromServer() { ///ready to use
         
         Generator_.classicTriviaPosts.removeAll()
         Generator_.trueFalsePosts.removeAll()
         Generator_.versusPosts.removeAll()
         
         DataBaseWithPosts.queryOrderedByKey().observeSingleEvent(of: .value, with: { (snapshot) in
+            guard snapshot.exists() else {
+                return
+            }
             let questions = snapshot.value as! [String : AnyObject]
+            let questionsCount = Double(questions.count)
+            var counter = questions.count - 1 //because there is deafult empty value in database
+            guard counter != 0 else {
+                AppDelegate.instance().showAlert(title: "Empty", msg: "There is no questions for you. You solved them all, You are smart!")
+                return
+            }
+            AppDelegate.instance().showProgressIndicator()
             
             for(_, value) in questions {
                 
@@ -590,7 +710,7 @@ class CollectionViewController: UIViewController {
                         switch type {
                         case "CLASSIC":
                             
-                            if let header = retrievedQuestion["questionHeader"] as? String, let answer1 = retrievedQuestion["answer1"] as? String, let answer2 = retrievedQuestion["answer2"] as? String, let answer3 = retrievedQuestion["answer3"] as? String, let answer4 = retrievedQuestion["answer4"] as? String, let rightAnswer = retrievedQuestion["rightAnswer"] as? String, let pathToImage = retrievedQuestion["pathToImage"] as? String, let dateString = retrievedQuestion["date"] as? String {
+                            if let header = retrievedQuestion["questionHeader"] as? String, let answer1 = retrievedQuestion["answer1"] as? String, let answer2 = retrievedQuestion["answer2"] as? String, let answer3 = retrievedQuestion["answer3"] as? String, let answer4 = retrievedQuestion["answer4"] as? String, let rightAnswer = retrievedQuestion["rightAnswer"] as? String, let pathToImage = retrievedQuestion["pathToImage"] as? String, let dateString = retrievedQuestion["date"] as? String, let postID = retrievedQuestion["postID"] as? String  {
                                 let formatter = DateFormatter()
                                 formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
                                 let date = formatter.date(from: dateString)!
@@ -603,16 +723,22 @@ class CollectionViewController: UIViewController {
                                 /////////////////
                                 cache.retrieveImage(forKey: pathToImage, options: nil, completionHandler: { (image_, cacheType) in
                                     if let image_ = image_ {
+                                        
+                                        
+                                        counter -= 1
                                         //CIRCLE PROGRESS
-                                        //progress.angle = self.addToStartValue(add: 360/self.retrievedCount)
+                                        ProgressIndicator.angle = self.addToStartValue(add: 360/questionsCount)
                                         
                                         print("questionType: CLASSIC, header: \(header), rightAnswer: \(rightAnswer):::EXIST IN CACHE")
                                         /*** if image in Cach make new TheFightersQuestion object ****/
                                         
-                                        let classic = ClassicTrivia(image: image_, questionTitle: header, rightAnswer: rightAnswer, date: date, answer1: answer1, answer2: answer2, answer3: answer3, answer4: answer4)
+                                        let classic = ClassicTrivia(image: image_, questionTitle: header, rightAnswer: rightAnswer, date: date, answer1: answer1, answer2: answer2, answer3: answer3, answer4: answer4, postID: postID)
                                         
                                         Generator_.classicTriviaPosts.append(classic)
-                                        
+                                        print("66666666666666666 counter's current value is \(counter)")
+                                        if counter <= 0 {
+                                            self.retrieveComplete()
+                                        }
                                         //if question more than one
                                     } else {    /*** No Cached ****/
                                         print("Current question Image doesn't exist in cache. Start downloading....")
@@ -623,13 +749,19 @@ class CollectionViewController: UIViewController {
                                             }
                                             /*** if image download suceed cache it and make new Question object ****/
                                             if let image = image {
+                                                
+                                                counter -= 1
                                                 print("NEW IMAGE DOWNLOADED")
                                                 //CIRCLE PROGRESS
-                                                //progress.angle = self.addToStartValue(add: 360/self.retrievedCount)
+                                                ProgressIndicator.angle = self.addToStartValue(add: 360/questionsCount)
                                                 cache.store(image, forKey: pathToImage)
-                                                let classic = ClassicTrivia(image: image, questionTitle: header, rightAnswer: rightAnswer, date: date, answer1: answer1, answer2: answer2, answer3: answer3, answer4: answer4)
+                                                let classic = ClassicTrivia(image: image, questionTitle: header, rightAnswer: rightAnswer, date: date, answer1: answer1, answer2: answer2, answer3: answer3, answer4: answer4, postID: postID)
                                                 Generator_.classicTriviaPosts.append(classic)
-                                                //self.adapter.performUpdates(animated: true, completion: nil)
+                                                
+                                                print("66666666666666666 counter's current value is \(counter)")
+                                                if counter <= 0 {
+                                                    self.retrieveComplete()
+                                                }
                                             }
                                         })
                                     }
@@ -648,86 +780,26 @@ class CollectionViewController: UIViewController {
     }
     
     
-    // MARK: - GET OLD AND LISTEN FOR NEW
-    fileprivate func listenForHotQuestionsOnServer() {
-        
-        Generator_.classicTriviaPosts.removeAll()
-        Generator_.trueFalsePosts.removeAll()
-        Generator_.versusPosts.removeAll()
-        
-        dataBaseHandle = Database.database().reference().child("posts").observe(.childAdded, with: { (snapshot) -> Void in
-            if let retrievedQuestion = snapshot.value as? [String : Any] {
-                if let type = retrievedQuestion["quizType"] as? String {
-                    switch type {
-                    case "CLASSIC":
-                        if let header = retrievedQuestion["questionHeader"] as? String, let answer1 = retrievedQuestion["answer1"] as? String, let answer2 = retrievedQuestion["answer2"] as? String, let answer3 = retrievedQuestion["answer3"] as? String, let answer4 = retrievedQuestion["answer4"] as? String, let rightAnswer = retrievedQuestion["rightAnswer"] as? String, let pathToImage = retrievedQuestion["pathToImage"] as? String, let dateString = retrievedQuestion["date"] as? String, let postID = retrievedQuestion["postID"] as? String {
-                            
-                            let formatter = DateFormatter()
-                            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                            let date = formatter.date(from: dateString)!
-                            //url only latin symbols
-                            let urlToImage = URL(string: pathToImage)
-                            guard urlToImage != nil else {
-                                print("BAD URL LINK !!!!!!!")
-                                return }
-                            /////////////////
-                            cache.retrieveImage(forKey: pathToImage, options: nil, completionHandler: { (image_, cacheType) in
-                                if let image_ = image_ {
-                                    //print("EXIST in cache.")
-                                    //CIRCLE PROGRESS
-                                    //progress.angle = self.addToStartValue(add: 360/self.retrievedCount)
-                                    
-                                    print("EXIST IN CACHE")
-                                    /*** if image in Cach make new TheFightersQuestion object ****/
-                                    
-                                    let classic = ClassicTrivia(image: image_, questionTitle: header, rightAnswer: rightAnswer, date: date, answer1: answer1, answer2: answer2, answer3: answer3, answer4: answer4, isLikedByCurrentUser: false, postID: postID)
-                                    
-                                    Generator_.classicTriviaPosts.append(classic)
-                                    
-                                    //if question more than one
-                                } else {    /*** No Cached ****/
-                                    print("NOT exist in cache.")
-                                    /*** if no in Cache we download ****/
-                                    downloader.downloadImage(with: urlToImage!, options: nil, progressBlock: nil, completionHandler: { (image, error, url, originalData) in
-                                        if error != nil {
-                                            print(error!.localizedDescription)
-                                            self.noInternetConnectionError()
-                                            /***/ //MARK: - !<esli zagruzit ne udalos to...>!
-                                        }
-                                        /*** if image download suceed cache it and make new TheFightersQuestion object ****/
-                                        if let image = image {
-                                            print("NEW IMAGE DOWNLOADED")
-                                            //CIRCLE PROGRESS
-                                            //progress.angle = self.addToStartValue(add: 360/self.retrievedCount)
-                                            
-                                            cache.store(image, forKey: pathToImage)
-                                            
-                                            let classic = ClassicTrivia(image: image, questionTitle: header, rightAnswer: rightAnswer, date: date, answer1: answer1, answer2: answer2, answer3: answer3, answer4: answer4, isLikedByCurrentUser: false, postID: postID)
-                                            Generator_.classicTriviaPosts.append(classic)
-                                            
-                                            //self.adapter.performUpdates(animated: true, completion: nil)
-                                        }
-                                    })
-                                }
-                            })
-                            
-                            
-                            /*** if no in Cache we download ****/
-                            break
-                        }
-                    case "TRUEFALSE": break
-                    case "VERSUS": break
-                    default: break
-                    }
-                }
-            }
-        })
-    }
-    
-
-    
     fileprivate func noInternetConnectionError() {
         AppDelegate.instance().showAlert(title: "No connection", msg: "Please, check your internet connection")
+    }
+    
+    fileprivate func addToStartValue(add: Double) -> Double{
+        if startValue <= 360 {
+            self.startValue += add
+            
+        } else if startValue >= 360 {
+            
+        }
+        print(startValue)
+        return self.startValue
+    }
+    
+    fileprivate func retrieveComplete() {
+        ProgressIndicator.animate(toAngle: 360.0, duration: 1.0) { (bool) in
+            AppDelegate.instance().dismissProgressIndicator()
+            self.startValue = 0.0
+        }
     }
     
     // MARK: - IBActions
@@ -745,6 +817,13 @@ class CollectionViewController: UIViewController {
         getQuestionsSolvedByCurrentUser()
     }
     
+    @IBAction func showAllQuestionsWithSolved(_ sender: UIButton) {
+        getAllQuestionsFromServer()
+    }
+    
+    @IBAction func showMostLikedNoSolved(_ sender: UIButton) {
+        getMostLikedQuestionsNotSolvedByCurrentUser()
+    }
     @IBAction func showMenuAction(_ sender: UIButton) {
         let menuViewController = storyboard!.instantiateViewController(withIdentifier: "MenuViewController")
         menuViewController.modalPresentationStyle = .custom

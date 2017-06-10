@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import PCLBlurEffectAlert
 import Kingfisher
+import KDCircularProgress
 
 extension CALayer {
     func borderUIColor() -> UIColor? {
@@ -33,6 +34,7 @@ var StorageRef: StorageReference!
 let downloader = ImageDownloader(name: "DOWNLOADER")
 let cache = ImageCache(name: "CACHE")
 
+var ProgressIndicator: KDCircularProgress!
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -41,7 +43,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
     var container: UIView!
-
+    
     /// DidFinishLaunhingWithOptions
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -115,6 +117,39 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func dismissActivityIndicator() {
         if let _ = self.window {
             self.container.removeFromSuperview()
+        }
+    }
+    
+    
+    func showProgressIndicator() {
+        if let window = self.window {
+            self.container = UIView()
+            self.container.frame = window.frame
+            self.container.center = window.center
+            self.container.backgroundColor = UIColor(white: 0, alpha: 0.7)
+            
+            ProgressIndicator = KDCircularProgress(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
+            ProgressIndicator.startAngle = -90
+            ProgressIndicator.progressThickness = 0.2
+            ProgressIndicator.trackThickness = 0.6
+            ProgressIndicator.clockwise = true
+            ProgressIndicator.gradientRotateSpeed = 2
+            ProgressIndicator.roundedCorners = false
+            ProgressIndicator.glowMode = .constant
+            ProgressIndicator.glowAmount = 0.9
+            ProgressIndicator.set(colors: UIColor.cyan ,UIColor.white, UIColor.magenta, UIColor.white, UIColor.orange)
+            ProgressIndicator.center = CGPoint(x: container.center.x, y: container.center.y + 25)
+
+            container.addSubview(ProgressIndicator)
+            window.addSubview(container)
+        }
+    }
+    
+    func dismissProgressIndicator() {
+        if let _ = self.window {
+            if container != nil {
+                self.container.removeFromSuperview()
+            }
         }
     }
 }

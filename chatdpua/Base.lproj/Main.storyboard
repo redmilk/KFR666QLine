@@ -585,95 +585,154 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="baA-3z-8Tu">
                                 <rect key="frame" x="0.0" y="2716" width="414" height="240"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="CcA-02-kHx">
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="pZX-WB-OdL">
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="240"/>
                                         <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aXW-4e-Z5j">
-                                                <rect key="frame" x="0.0" y="100" width="83" height="40"/>
-                                                <color key="backgroundColor" red="0.12637259070000001" green="0.12639245390000001" blue="0.1263653636" alpha="1" colorSpace="calibratedRGB"/>
-                                                <fontDescription key="fontDescription" type="system" weight="thin" pointSize="23"/>
-                                                <state key="normal" title="All">
-                                                    <color key="titleColor" red="0.90823972230000005" green="0.92638683320000004" blue="0.93171715740000005" alpha="1" colorSpace="calibratedRGB"/>
-                                                </state>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="color" keyPath="layer.borderUIColor">
-                                                        <color key="value" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
-                                                        <integer key="value" value="1"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                                <connections>
-                                                    <action selector="showAllQuestions:" destination="d5h-vM-RYB" eventType="touchUpInside" id="SHB-XB-5qe"/>
-                                                </connections>
-                                            </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dKz-ae-zlX">
-                                                <rect key="frame" x="83" y="100" width="83" height="40"/>
-                                                <color key="backgroundColor" red="0.12637259066104889" green="0.12639245390892029" blue="0.12636536359786987" alpha="1" colorSpace="calibratedRGB"/>
-                                                <fontDescription key="fontDescription" type="system" weight="thin" pointSize="23"/>
-                                                <state key="normal" title="Top">
-                                                    <color key="titleColor" red="0.90823972225189209" green="0.92638683319091797" blue="0.9317171573638916" alpha="1" colorSpace="calibratedRGB"/>
-                                                </state>
-                                                <connections>
-                                                    <action selector="showMostLikedQuestions:" destination="d5h-vM-RYB" eventType="touchUpInside" id="tez-Ci-ayc"/>
-                                                </connections>
-                                            </button>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Xs4-wZ-M2a">
-                                                <rect key="frame" x="166" y="100" width="82.333333333333343" height="40"/>
-                                                <color key="backgroundColor" red="0.53409618139266968" green="0.59629547595977783" blue="0.81492191553115845" alpha="1" colorSpace="calibratedRGB"/>
-                                                <fontDescription key="fontDescription" type="system" weight="thin" pointSize="25"/>
-                                                <color key="textColor" red="0.90823972225189209" green="0.92638683319091797" blue="0.9317171573638916" alpha="1" colorSpace="calibratedRGB"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hay-sY-GxC">
-                                                <rect key="frame" x="248.33333333333337" y="100" width="82.666666666666629" height="40"/>
-                                                <color key="backgroundColor" red="0.12637259070000001" green="0.12639245390000001" blue="0.1263653636" alpha="1" colorSpace="calibratedRGB"/>
-                                                <fontDescription key="fontDescription" type="system" weight="thin" pointSize="23"/>
-                                                <state key="normal" title="Finished">
-                                                    <color key="titleColor" red="0.90823972230000005" green="0.92638683320000004" blue="0.93171715740000005" alpha="1" colorSpace="calibratedRGB"/>
-                                                </state>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="color" keyPath="layer.borderUIColor">
-                                                        <color key="value" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
-                                                        <integer key="value" value="1"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                                <connections>
-                                                    <action selector="showCurrentUserSolvedQuestion:" destination="d5h-vM-RYB" eventType="touchUpInside" id="QmS-7K-FRt"/>
-                                                </connections>
-                                            </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="65f-n7-lKz">
-                                                <rect key="frame" x="331" y="100" width="83" height="40"/>
-                                                <color key="backgroundColor" red="0.12637259070000001" green="0.12639245390000001" blue="0.1263653636" alpha="1" colorSpace="calibratedRGB"/>
-                                                <fontDescription key="fontDescription" type="system" weight="thin" pointSize="21"/>
-                                                <state key="normal" title="My Fav">
-                                                    <color key="titleColor" red="0.90823972230000005" green="0.92638683320000004" blue="0.93171715740000005" alpha="1" colorSpace="calibratedRGB"/>
-                                                </state>
-                                                <connections>
-                                                    <action selector="showQuestionsLikedByCurrentUser:" destination="d5h-vM-RYB" eventType="touchUpInside" id="Ycy-99-RhN"/>
-                                                </connections>
-                                            </button>
+                                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="CcA-02-kHx">
+                                                <rect key="frame" x="0.0" y="0.0" width="414" height="120"/>
+                                                <subviews>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aXW-4e-Z5j">
+                                                        <rect key="frame" x="0.0" y="40" width="103.33333333333333" height="40"/>
+                                                        <color key="backgroundColor" red="0.12637259070000001" green="0.12639245390000001" blue="0.1263653636" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <fontDescription key="fontDescription" type="system" weight="thin" pointSize="23"/>
+                                                        <state key="normal" title="Abyss">
+                                                            <color key="titleColor" red="0.90823972230000005" green="0.92638683320000004" blue="0.93171715740000005" alpha="1" colorSpace="calibratedRGB"/>
+                                                        </state>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="color" keyPath="layer.borderUIColor">
+                                                                <color key="value" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                                                <integer key="value" value="1"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                        <connections>
+                                                            <action selector="showAllQuestions:" destination="d5h-vM-RYB" eventType="touchUpInside" id="SHB-XB-5qe"/>
+                                                        </connections>
+                                                    </button>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dKz-ae-zlX">
+                                                        <rect key="frame" x="103.33333333333331" y="40" width="103.66666666666669" height="40"/>
+                                                        <color key="backgroundColor" red="0.12637259066104889" green="0.12639245390892029" blue="0.12636536359786987" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <fontDescription key="fontDescription" type="system" weight="thin" pointSize="23"/>
+                                                        <state key="normal" title="Top ❤️">
+                                                            <color key="titleColor" red="0.90823972225189209" green="0.92638683319091797" blue="0.9317171573638916" alpha="1" colorSpace="calibratedRGB"/>
+                                                        </state>
+                                                        <connections>
+                                                            <action selector="showMostLikedQuestions:" destination="d5h-vM-RYB" eventType="touchUpInside" id="tez-Ci-ayc"/>
+                                                        </connections>
+                                                    </button>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hay-sY-GxC">
+                                                        <rect key="frame" x="207.00000000000003" y="40" width="103.66666666666671" height="40"/>
+                                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <fontDescription key="fontDescription" type="system" weight="thin" pointSize="23"/>
+                                                        <state key="normal" title="Solved">
+                                                            <color key="titleColor" red="0.90823972230000005" green="0.92638683320000004" blue="0.93171715740000005" alpha="1" colorSpace="calibratedRGB"/>
+                                                        </state>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="color" keyPath="layer.borderUIColor">
+                                                                <color key="value" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                                                <integer key="value" value="1"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                        <connections>
+                                                            <action selector="showCurrentUserSolvedQuestion:" destination="d5h-vM-RYB" eventType="touchUpInside" id="QmS-7K-FRt"/>
+                                                        </connections>
+                                                    </button>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="65f-n7-lKz">
+                                                        <rect key="frame" x="310.66666666666674" y="40" width="103.33333333333331" height="40"/>
+                                                        <color key="backgroundColor" red="0.12637259070000001" green="0.12639245390000001" blue="0.1263653636" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <fontDescription key="fontDescription" type="system" weight="thin" pointSize="21"/>
+                                                        <state key="normal" title="My ❤️">
+                                                            <color key="titleColor" red="0.90823972230000005" green="0.92638683320000004" blue="0.93171715740000005" alpha="1" colorSpace="calibratedRGB"/>
+                                                        </state>
+                                                        <connections>
+                                                            <action selector="showQuestionsLikedByCurrentUser:" destination="d5h-vM-RYB" eventType="touchUpInside" id="Ycy-99-RhN"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstItem="dKz-ae-zlX" firstAttribute="width" secondItem="aXW-4e-Z5j" secondAttribute="width" id="7gC-hd-VUc"/>
+                                                    <constraint firstItem="Hay-sY-GxC" firstAttribute="height" secondItem="aXW-4e-Z5j" secondAttribute="height" id="A8q-51-vwV"/>
+                                                    <constraint firstItem="Hay-sY-GxC" firstAttribute="width" secondItem="aXW-4e-Z5j" secondAttribute="width" id="fre-dJ-yic"/>
+                                                    <constraint firstItem="65f-n7-lKz" firstAttribute="width" secondItem="aXW-4e-Z5j" secondAttribute="width" id="glE-RS-Qa6"/>
+                                                    <constraint firstItem="dKz-ae-zlX" firstAttribute="height" secondItem="aXW-4e-Z5j" secondAttribute="height" id="jwI-Jb-C7j"/>
+                                                    <constraint firstItem="65f-n7-lKz" firstAttribute="height" secondItem="aXW-4e-Z5j" secondAttribute="height" id="nXa-Do-AuQ"/>
+                                                </constraints>
+                                            </stackView>
+                                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Azd-X0-1N9">
+                                                <rect key="frame" x="0.0" y="120" width="414" height="120"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Xs4-wZ-M2a">
+                                                        <rect key="frame" x="0.0" y="40" width="103.66666666666667" height="40"/>
+                                                        <color key="backgroundColor" red="0.53409618139266968" green="0.59629547595977783" blue="0.81492191553115845" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <fontDescription key="fontDescription" type="system" weight="thin" pointSize="25"/>
+                                                        <color key="textColor" red="0.90823972225189209" green="0.92638683319091797" blue="0.9317171573638916" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="egp-H1-BBw">
+                                                        <rect key="frame" x="103.66666666666666" y="40" width="103.66666666666666" height="40"/>
+                                                        <color key="backgroundColor" red="0.12637259070000001" green="0.12639245390000001" blue="0.1263653636" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <fontDescription key="fontDescription" type="system" weight="thin" pointSize="23"/>
+                                                        <state key="normal" title="ALL🌀">
+                                                            <color key="titleColor" red="0.90823972230000005" green="0.92638683320000004" blue="0.93171715740000005" alpha="1" colorSpace="calibratedRGB"/>
+                                                        </state>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="color" keyPath="layer.borderUIColor">
+                                                                <color key="value" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                                                <integer key="value" value="1"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                        <connections>
+                                                            <action selector="showAllQuestionsWithSolved:" destination="d5h-vM-RYB" eventType="touchUpInside" id="aLh-t4-Ed1"/>
+                                                        </connections>
+                                                    </button>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="24y-be-845">
+                                                        <rect key="frame" x="207.33333333333331" y="40" width="103.33333333333331" height="40"/>
+                                                        <color key="backgroundColor" red="0.12637259070000001" green="0.12639245390000001" blue="0.1263653636" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <fontDescription key="fontDescription" type="system" weight="thin" pointSize="23"/>
+                                                        <state key="normal" title="Top❤️💭">
+                                                            <color key="titleColor" red="0.90823972230000005" green="0.92638683320000004" blue="0.93171715740000005" alpha="1" colorSpace="calibratedRGB"/>
+                                                        </state>
+                                                        <connections>
+                                                            <action selector="showMostLikedNoSolved:" destination="d5h-vM-RYB" eventType="touchUpInside" id="FJO-O9-7W1"/>
+                                                        </connections>
+                                                    </button>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1PK-J7-nks">
+                                                        <rect key="frame" x="310.66666666666674" y="40" width="103.33333333333331" height="40"/>
+                                                        <color key="backgroundColor" red="0.12637259070000001" green="0.12639245390000001" blue="0.1263653636" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <fontDescription key="fontDescription" type="system" weight="thin" pointSize="21"/>
+                                                        <state key="normal" title="🔥">
+                                                            <color key="titleColor" red="0.90823972230000005" green="0.92638683320000004" blue="0.93171715740000005" alpha="1" colorSpace="calibratedRGB"/>
+                                                        </state>
+                                                    </button>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstItem="24y-be-845" firstAttribute="height" secondItem="egp-H1-BBw" secondAttribute="height" id="8M3-vL-7Gv"/>
+                                                    <constraint firstItem="Xs4-wZ-M2a" firstAttribute="width" secondItem="egp-H1-BBw" secondAttribute="width" id="Cak-Pm-eta"/>
+                                                    <constraint firstItem="Xs4-wZ-M2a" firstAttribute="height" secondItem="egp-H1-BBw" secondAttribute="height" id="Jz7-Ul-aTB"/>
+                                                    <constraint firstItem="1PK-J7-nks" firstAttribute="height" secondItem="egp-H1-BBw" secondAttribute="height" id="L8p-Eq-rLh"/>
+                                                    <constraint firstItem="1PK-J7-nks" firstAttribute="width" secondItem="egp-H1-BBw" secondAttribute="width" id="P72-dW-GiO"/>
+                                                    <constraint firstItem="24y-be-845" firstAttribute="width" secondItem="egp-H1-BBw" secondAttribute="width" id="nD7-MD-IYs"/>
+                                                </constraints>
+                                            </stackView>
                                         </subviews>
                                         <constraints>
-                                            <constraint firstItem="65f-n7-lKz" firstAttribute="height" secondItem="dKz-ae-zlX" secondAttribute="height" id="0Dn-Kp-2b6"/>
-                                            <constraint firstItem="aXW-4e-Z5j" firstAttribute="width" secondItem="dKz-ae-zlX" secondAttribute="width" id="726-Lf-3nK"/>
-                                            <constraint firstItem="aXW-4e-Z5j" firstAttribute="height" secondItem="dKz-ae-zlX" secondAttribute="height" id="BQn-TG-nKw"/>
-                                            <constraint firstItem="Hay-sY-GxC" firstAttribute="height" secondItem="dKz-ae-zlX" secondAttribute="height" id="Bki-MM-dt2"/>
-                                            <constraint firstItem="Xs4-wZ-M2a" firstAttribute="width" secondItem="dKz-ae-zlX" secondAttribute="width" id="am5-ca-cZt"/>
-                                            <constraint firstItem="65f-n7-lKz" firstAttribute="width" secondItem="dKz-ae-zlX" secondAttribute="width" id="fJj-lf-9kc"/>
-                                            <constraint firstItem="Hay-sY-GxC" firstAttribute="width" secondItem="dKz-ae-zlX" secondAttribute="width" id="hg4-zL-0ME"/>
-                                            <constraint firstItem="Xs4-wZ-M2a" firstAttribute="height" secondItem="dKz-ae-zlX" secondAttribute="height" id="m0X-Af-x4g"/>
+                                            <constraint firstItem="CcA-02-kHx" firstAttribute="width" secondItem="pZX-WB-OdL" secondAttribute="width" id="2rx-XG-tHg"/>
+                                            <constraint firstItem="Azd-X0-1N9" firstAttribute="height" secondItem="CcA-02-kHx" secondAttribute="height" id="IZi-ZU-iX0"/>
+                                            <constraint firstItem="Azd-X0-1N9" firstAttribute="width" secondItem="pZX-WB-OdL" secondAttribute="width" id="TR2-Vp-rIV"/>
                                         </constraints>
                                     </stackView>
                                 </subviews>
                                 <color key="backgroundColor" red="0.17257410287857056" green="0.21834245324134827" blue="0.44677489995956421" alpha="0.60843857020547942" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstItem="CcA-02-kHx" firstAttribute="centerY" secondItem="baA-3z-8Tu" secondAttribute="centerY" id="FWk-l8-wZ7"/>
-                                    <constraint firstItem="CcA-02-kHx" firstAttribute="width" secondItem="baA-3z-8Tu" secondAttribute="width" id="T1H-bA-Bew"/>
-                                    <constraint firstItem="CcA-02-kHx" firstAttribute="centerX" secondItem="baA-3z-8Tu" secondAttribute="centerX" id="oPB-eg-ues"/>
-                                    <constraint firstItem="CcA-02-kHx" firstAttribute="height" secondItem="baA-3z-8Tu" secondAttribute="height" id="y6g-p6-aIt"/>
+                                    <constraint firstItem="pZX-WB-OdL" firstAttribute="centerX" secondItem="baA-3z-8Tu" secondAttribute="centerX" id="FLH-fF-hyd"/>
+                                    <constraint firstItem="pZX-WB-OdL" firstAttribute="width" secondItem="baA-3z-8Tu" secondAttribute="width" id="Io7-RR-jT0"/>
+                                    <constraint firstItem="pZX-WB-OdL" firstAttribute="centerY" secondItem="baA-3z-8Tu" secondAttribute="centerY" id="ULW-54-nwI"/>
+                                    <constraint firstItem="pZX-WB-OdL" firstAttribute="height" secondItem="baA-3z-8Tu" secondAttribute="height" id="m6C-9f-hNS"/>
                                 </constraints>
                             </view>
                         </subviews>
