@@ -17,14 +17,14 @@ extension ClassicTriviaSectionCtrl : IGListDisplayDelegate {
         
         if let postID = classicTriviaPost.postID {
             if let cell_ = cell as? ClassicTriviaCell {
+                
+                //addParallaxToView(vw: cell_.containerView)
+                
                 var count = 0
                 DataBaseRef.child("likes").child(postID).observeSingleEvent(of: .value, with: { (snapshot) in
                     if let usersWhoLiked = snapshot.value as? [String : AnyObject] {
                         count = usersWhoLiked.count
                         let uid = Auth.auth().currentUser!.uid
-                        if let thisUser = usersWhoLiked[uid] as? Bool {
-                            print("||||||||||||||||||||||||||")
-                        }
                         let thisUserAlreadyLikedThisPost = usersWhoLiked.contains(where: { (key, value) -> Bool in
                              return key == uid
                         })

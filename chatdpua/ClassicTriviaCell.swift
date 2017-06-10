@@ -58,28 +58,39 @@ class ClassicTriviaCell: UICollectionViewCell {
         likeButton.setTitle("💟", for: .normal)
     }
     
-    
+    // check for user answer
     fileprivate func updateDatabaseIfRight() {
         
         let uid = Auth.auth().currentUser!.uid
         let answeredUserID: [String : Any] = [uid : true]
         DataBaseWithPosts.child(currentQuestion.postID!).child("usersAnswerRight").updateChildValues(answeredUserID)
         let answeredPostID: [String : Any] = [currentQuestion.postID! : true]
-        DataBaseRef.child("users").child(uid).child("finishedQuestions").updateChildValues(answeredPostID)
-        DataBaseRef.child("users").child(uid).child("score").runTransactionBlock({ (currentData) -> TransactionResult in
-            var value = currentData.value as? Int
+        // if there is current user in current post' list of users who answered right
+        DataBaseRef.child("posts").child(currentQuestion.postID!).child("usersAnswerRight").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
             
-            if value == nil {
-                value = 0
+            if let _ = snapshot.value as? Bool {
+                // so there is our user already answered this question
+                // do nothing
+            } else {
+                // if this question is new for user
+                DataBaseRef.child("users").child(uid).child("finishedQuestions").updateChildValues(answeredPostID) { (error, ref) in
+                    DataBaseRef.child("users").child(uid).child("score").runTransactionBlock({ (currentData) -> TransactionResult in
+                        var value = currentData.value as? Int
+                        
+                        if value == nil {
+                            value = 0
+                        }
+                        
+                        currentData.value = value! + 1
+                        
+                        //UserScoreLabel_?.text = (value! + 1).description
+                        
+                        return TransactionResult.success(withValue: currentData)
+                    })
+                }
             }
-            
-            currentData.value = value! + 1
-            
-            //UserScoreLabel_?.text = (value! + 1).description
-            
-            return TransactionResult.success(withValue: currentData)
         })
-
+        DataBaseRef.removeAllObservers()
     }
     
     @IBAction func answer1Pressed(_ sender: UIButton) {

@@ -209,6 +209,22 @@ public class KingfisherManager {
             completionHandler?(image, error, cacheType, imageURL)
         }
         
+        func handleNoCache() {
+            if options.onlyFromCache {
+                let error = NSError(domain: KingfisherErrorDomain, code: KingfisherError.notCached.rawValue, userInfo: nil)
+                diskTaskCompletionHandler(nil, error, .none, url)
+                return
+            }
+            self.downloadAndCacheImage(
+                with: url,
+                forKey: key,
+                retrieveImageTask: retrieveImageTask,
+                progressBlock: progressBlock,
+                completionHandler: diskTaskCompletionHandler,
+                options: options)
+            
+        }
+        
         let targetCache = options.targetCache
         targetCache.retrieveImage(forKey: key, options: options) { image, cacheType in
             if image != nil {
@@ -221,22 +237,6 @@ public class KingfisherManager {
                 let optionsWithoutProcessor = options.removeAllMatchesIgnoringAssociatedValue(.processor(processor))
                 targetCache.retrieveImage(forKey: key, options: optionsWithoutProcessor) { image, cacheType in
                     guard let image = image else {
-                        func handleNoCache() {
-                            if options.onlyFromCache {
-                                let error = NSError(domain: KingfisherErrorDomain, code: KingfisherError.notCached.rawValue, userInfo: nil)
-                                diskTaskCompletionHandler(nil, error, .none, url)
-                                return
-                            }
-                            self.downloadAndCacheImage(
-                                with: url,
-                                forKey: key,
-                                retrieveImageTask: retrieveImageTask,
-                                progressBlock: progressBlock,
-                                completionHandler: diskTaskCompletionHandler,
-                                options: options)
-                            
-                        }
-
                         handleNoCache()
                         return
                     }
@@ -248,22 +248,6 @@ public class KingfisherManager {
                 return
             }
             
-            func handleNoCache() {
-                if options.onlyFromCache {
-                    let error = NSError(domain: KingfisherErrorDomain, code: KingfisherError.notCached.rawValue, userInfo: nil)
-                    diskTaskCompletionHandler(nil, error, .none, url)
-                    return
-                }
-                self.downloadAndCacheImage(
-                    with: url,
-                    forKey: key,
-                    retrieveImageTask: retrieveImageTask,
-                    progressBlock: progressBlock,
-                    completionHandler: diskTaskCompletionHandler,
-                    options: options)
-                
-            }
-
             handleNoCache()
         }
     }

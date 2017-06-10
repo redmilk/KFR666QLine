@@ -11,19 +11,21 @@ import IGListKit
 import Firebase
 import Kingfisher
 
-@IBDesignable class GradientView: UIView {
-    @IBInspectable var firstColor: UIColor = UIColor.white
-    @IBInspectable var secondColor: UIColor = UIColor.black
+func addParallaxToView(vw: UIView) {
+    let amount = 100
     
-    override class var layerClass: AnyClass {
-        return CAGradientLayer.self
-    }
+    let horizontal = UIInterpolatingMotionEffect(keyPath: "center.x", type: .tiltAlongHorizontalAxis)
+    horizontal.minimumRelativeValue = -amount
+    horizontal.maximumRelativeValue = amount
     
-    override func layoutSubviews() {
-        (layer as! CAGradientLayer).colors = [firstColor.cgColor, secondColor.cgColor]
-    }
+    let vertical = UIInterpolatingMotionEffect(keyPath: "center.y", type: .tiltAlongVerticalAxis)
+    vertical.minimumRelativeValue = -amount
+    vertical.maximumRelativeValue = amount
+    
+    let group = UIMotionEffectGroup()
+    group.motionEffects = [horizontal, vertical]
+    vw.addMotionEffect(group)
 }
-
 
 extension CollectionViewController: GeneratorDelegate {
     func didUpdatePostsArray(generator: Generator) {
@@ -45,7 +47,7 @@ class CollectionViewController: UIViewController {
     
     @IBOutlet weak var userScore: UILabel!
     @IBOutlet weak var collectionView: IGListCollectionView!
-
+    
     
     fileprivate lazy var presentationAnimator = GuillotineTransitionAnimation()
     fileprivate var gradient = CAGradientLayer()
@@ -101,17 +103,6 @@ class CollectionViewController: UIViewController {
         
         uid = Auth.auth().currentUser!.uid
         
-        
-//        DataBaseRef.child("users").child(uid).child("score").runTransactionBlock({ (currentData) -> TransactionResult in
-//            var value = currentData.value as? Int
-//            
-//            if value == nil {
-//                value = 0
-//            }
-//            self.userScore.text = value?.description
-//            return TransactionResult.success(withValue: currentData)
-//        })
-        
         DataBaseRef.child("users").child(uid).child("score").observeSingleEvent(of: .value, with: { (snapshot) in
             let value = snapshot.value as? Int
             
@@ -121,11 +112,11 @@ class CollectionViewController: UIViewController {
                 self.userScore.text = value!.description
             }
         })
+        DataBaseRef.removeAllObservers()
         
+        // MARK: -View Did Load
         
-        getWithoutFinishedQuestions()
-        //spectateHotQuestionsOnServer()
-        //getQuestionsFromServerOrCache()
+        getAllQuestionsFromServer()
     }
     
     override func viewDidLayoutSubviews() {
@@ -141,76 +132,357 @@ class CollectionViewController: UIViewController {
         
     }
     
-    fileprivate func getAllFinishedQuestions() {
+    
+    // MARK: - TOP LIKED NO SOLVED
+    fileprivate func getMostLikedQuestionsNotSolvedByCurrentUser()
+    {
+        Generator_.classicTriviaPosts.removeAll()
+        Generator_.trueFalsePosts.removeAll()
+        Generator_.versusPosts.removeAll()
         
+        //self.adapter.performUpdates(animated: true, completion: nil)
         
+        DataBaseRef.child("posts").queryOrdered(byChild: "likesCount").queryStarting(atValue: "1").observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            guard snapshot.exists() else {
+                return
+            }
+            
+            let questions = snapshot.value as! [String : AnyObject]
+            for(_, value) in questions {
+                
+                if let retrievedQuestion = value as? [String : Any] {
+                    
+                    if let type = retrievedQuestion["quizType"] as? String {
+                        switch type {
+                        case "CLASSIC":
+                            
+                            if let header = retrievedQuestion["questionHeader"] as? String, let answer1 = retrievedQuestion["answer1"] as? String, let answer2 = retrievedQuestion["answer2"] as? String, let answer3 = retrievedQuestion["answer3"] as? String, let answer4 = retrievedQuestion["answer4"] as? String, let rightAnswer = retrievedQuestion["rightAnswer"] as? String, let pathToImage = retrievedQuestion["pathToImage"] as? String, let dateString = retrievedQuestion["date"] as? String, let postID = retrievedQuestion["postID"] as? String {
+                                
+                                // if user already solved this question break
+                                if let usersWhoFinishedThisQuestion = retrievedQuestion["usersAnswerRight"] as? [String : Any] {
+                                    if let _ = usersWhoFinishedThisQuestion[self.uid] as? Bool {
+                                        break
+                                    }
+                                }
+                                
+                                let formatter = DateFormatter()
+                                formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                                let date = formatter.date(from: dateString)!
+                                //url only latin symbols
+                                let urlToImage = URL(string: pathToImage)
+                                guard urlToImage != nil else {
+                                    print("BAD URL LINK !!!!!!!")
+                                    return }
+                                /////////////////
+                                cache.retrieveImage(forKey: pathToImage, options: nil, completionHandler: { (image_, cacheType) in
+                                    if let image_ = image_ {
+                                        //CIRCLE PROGRESS
+                                        //progress.angle = self.addToStartValue(add: 360/self.retrievedCount)
+                                        
+                                        print("EXIST IN CACHE")
+                                        /*** if image in Cach make new TheFightersQuestion object ****/
+                                        
+                                        let classic = ClassicTrivia(image: image_, questionTitle: header, rightAnswer: rightAnswer, date: date, answer1: answer1, answer2: answer2, answer3: answer3, answer4: answer4, isLikedByCurrentUser: false, postID: postID)
+                                        
+                                        Generator_.classicTriviaPosts.append(classic)
+                                        
+                                        //if question more than one
+                                    } else {    /*** No Cached ****/
+                                        print("NOT exist in cache.")
+                                        /*** if no in Cache we download ****/
+                                        downloader.downloadImage(with: urlToImage!, options: nil, progressBlock: nil, completionHandler: { (image, error, url, originalData) in
+                                            if error != nil {
+                                                print(error!.localizedDescription)
+                                                self.noInternetConnectionError()
+                                                /***/ //MARK: - !<esli zagruzit ne udalos to...>!
+                                            }
+                                            /*** if image download suceed cache it and make new TheFightersQuestion object ****/
+                                            if let image = image {
+                                                print("NEW IMAGE DOWNLOADED")
+                                                //CIRCLE PROGRESS
+                                                //progress.angle = self.addToStartValue(add: 360/self.retrievedCount)
+                                                
+                                                cache.store(image, forKey: pathToImage)
+                                                
+                                                let classic = ClassicTrivia(image: image, questionTitle: header, rightAnswer: rightAnswer, date: date, answer1: answer1, answer2: answer2, answer3: answer3, answer4: answer4, isLikedByCurrentUser: false, postID: postID)
+                                                Generator_.classicTriviaPosts.append(classic)
+                                                
+                                                //self.adapter.performUpdates(animated: true, completion: nil)
+                                            }
+                                        })
+                                    }
+                                })
+                            }
+                            break
+                        case "TRUEFALSE": break
+                        case "VERSUS": break
+                        default: break
+                        }
+                    }
+                }
+            }
+            
+        })
+        /// detach listeners
+        DataBaseRef.removeAllObservers()
+    }
+    
+    // MARK: - TOP LIKED
+    fileprivate func getMostLikedQuestions() {
+        Generator_.classicTriviaPosts.removeAll()
+        Generator_.trueFalsePosts.removeAll()
+        Generator_.versusPosts.removeAll()
         
+        //self.adapter.performUpdates(animated: true, completion: nil)
+        
+        DataBaseRef.child("posts").queryOrdered(byChild: "likesCount").queryStarting(atValue: "1").observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            guard snapshot.exists() else {
+                return
+            }
+            
+            let questions = snapshot.value as! [String : AnyObject]
+            for(_, value) in questions {
+                
+                if let retrievedQuestion = value as? [String : Any] {
+                    
+                    if let type = retrievedQuestion["quizType"] as? String {
+                        switch type {
+                        case "CLASSIC":
+                            
+                            if let header = retrievedQuestion["questionHeader"] as? String, let answer1 = retrievedQuestion["answer1"] as? String, let answer2 = retrievedQuestion["answer2"] as? String, let answer3 = retrievedQuestion["answer3"] as? String, let answer4 = retrievedQuestion["answer4"] as? String, let rightAnswer = retrievedQuestion["rightAnswer"] as? String, let pathToImage = retrievedQuestion["pathToImage"] as? String, let dateString = retrievedQuestion["date"] as? String, let postID = retrievedQuestion["postID"] as? String {
+                                
+                                let formatter = DateFormatter()
+                                formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                                let date = formatter.date(from: dateString)!
+                                //url only latin symbols
+                                let urlToImage = URL(string: pathToImage)
+                                guard urlToImage != nil else {
+                                    print("BAD URL LINK !!!!!!!")
+                                    return }
+                                /////////////////
+                                cache.retrieveImage(forKey: pathToImage, options: nil, completionHandler: { (image_, cacheType) in
+                                    if let image_ = image_ {
+                                        //CIRCLE PROGRESS
+                                        //progress.angle = self.addToStartValue(add: 360/self.retrievedCount)
+                                        
+                                        print("EXIST IN CACHE")
+                                        /*** if image in Cach make new TheFightersQuestion object ****/
+                                        
+                                        let classic = ClassicTrivia(image: image_, questionTitle: header, rightAnswer: rightAnswer, date: date, answer1: answer1, answer2: answer2, answer3: answer3, answer4: answer4, isLikedByCurrentUser: false, postID: postID)
+                                        
+                                        Generator_.classicTriviaPosts.append(classic)
+                                        
+                                        //if question more than one
+                                    } else {    /*** No Cached ****/
+                                        print("NOT exist in cache.")
+                                        /*** if no in Cache we download ****/
+                                        downloader.downloadImage(with: urlToImage!, options: nil, progressBlock: nil, completionHandler: { (image, error, url, originalData) in
+                                            if error != nil {
+                                                print(error!.localizedDescription)
+                                                self.noInternetConnectionError()
+                                                /***/ //MARK: - !<esli zagruzit ne udalos to...>!
+                                            }
+                                            /*** if image download suceed cache it and make new TheFightersQuestion object ****/
+                                            if let image = image {
+                                                print("NEW IMAGE DOWNLOADED")
+                                                //CIRCLE PROGRESS
+                                                //progress.angle = self.addToStartValue(add: 360/self.retrievedCount)
+                                                
+                                                cache.store(image, forKey: pathToImage)
+                                                
+                                                let classic = ClassicTrivia(image: image, questionTitle: header, rightAnswer: rightAnswer, date: date, answer1: answer1, answer2: answer2, answer3: answer3, answer4: answer4, isLikedByCurrentUser: false, postID: postID)
+                                                Generator_.classicTriviaPosts.append(classic)
+                                                
+                                                //self.adapter.performUpdates(animated: true, completion: nil)
+                                            }
+                                        })
+                                    }
+                                })
+                            }
+                            break
+                        case "TRUEFALSE": break
+                        case "VERSUS": break
+                        default: break
+                        }
+                    }
+                }
+            }
+            
+        })
+        /// detach listeners
+        DataBaseRef.removeAllObservers()
+    }
+    // MARK: - LIKED BY ME
+    fileprivate func getQuestionLikedByCurrentUser() {
+        Generator_.classicTriviaPosts.removeAll()
+        Generator_.trueFalsePosts.removeAll()
+        Generator_.versusPosts.removeAll()
+        
+        DataBaseWithPosts.queryOrderedByKey().observeSingleEvent(of: .value, with: { (snapshot) in
+            let questions = snapshot.value as! [String : AnyObject]
+            for(_, value) in questions {
+                
+                if let retrievedQuestion = value as? [String : Any] {
+                    
+                    if let type = retrievedQuestion["quizType"] as? String {
+                        switch type {
+                        case "CLASSIC":
+                            
+                            if let header = retrievedQuestion["questionHeader"] as? String, let answer1 = retrievedQuestion["answer1"] as? String, let answer2 = retrievedQuestion["answer2"] as? String, let answer3 = retrievedQuestion["answer3"] as? String, let answer4 = retrievedQuestion["answer4"] as? String, let rightAnswer = retrievedQuestion["rightAnswer"] as? String, let pathToImage = retrievedQuestion["pathToImage"] as? String, let dateString = retrievedQuestion["date"] as? String, let postID = retrievedQuestion["postID"] as? String {
+                                
+                                // check if current user liked this post
+                                DataBaseRef.child("likes").child(postID).child(self.uid).queryOrderedByKey().observeSingleEvent(of: .value, with: { (snapshot) in
+                                    
+                                    if let _ = snapshot.value as? Bool {
+                                        //this user liked the question
+                                        
+                                        let formatter = DateFormatter()
+                                        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                                        let date = formatter.date(from: dateString)!
+                                        //url only latin symbols
+                                        let urlToImage = URL(string: pathToImage)
+                                        guard urlToImage != nil else {
+                                            print("BAD URL LINK !!!!!!!")
+                                            return }
+                                        /////////////////
+                                        cache.retrieveImage(forKey: pathToImage, options: nil, completionHandler: { (image_, cacheType) in
+                                            if let image_ = image_ {
+                                                //print("EXIST in cache.")
+                                                //CIRCLE PROGRESS
+                                                //progress.angle = self.addToStartValue(add: 360/self.retrievedCount)
+                                                
+                                                print("EXIST IN CACHE")
+                                                /*** if image in Cach make new TheFightersQuestion object ****/
+                                                
+                                                let classic = ClassicTrivia(image: image_, questionTitle: header, rightAnswer: rightAnswer, date: date, answer1: answer1, answer2: answer2, answer3: answer3, answer4: answer4, isLikedByCurrentUser: false, postID: postID)
+                                                
+                                                Generator_.classicTriviaPosts.append(classic)
+                                                
+                                                //if question more than one
+                                            } else {    /*** No Cached ****/
+                                                print("NOT exist in cache.")
+                                                /*** if no in Cache we download ****/
+                                                downloader.downloadImage(with: urlToImage!, options: nil, progressBlock: nil, completionHandler: { (image, error, url, originalData) in
+                                                    if error != nil {
+                                                        print(error!.localizedDescription)
+                                                        self.noInternetConnectionError()
+                                                        /***/ //MARK: - !<esli zagruzit ne udalos to...>!
+                                                    }
+                                                    /*** if image download suceed cache it and make new TheFightersQuestion object ****/
+                                                    if let image = image {
+                                                        print("NEW IMAGE DOWNLOADED")
+                                                        //CIRCLE PROGRESS
+                                                        //progress.angle = self.addToStartValue(add: 360/self.retrievedCount)
+                                                        
+                                                        cache.store(image, forKey: pathToImage)
+                                                        
+                                                        let classic = ClassicTrivia(image: image, questionTitle: header, rightAnswer: rightAnswer, date: date, answer1: answer1, answer2: answer2, answer3: answer3, answer4: answer4, isLikedByCurrentUser: false, postID: postID)
+                                                        Generator_.classicTriviaPosts.append(classic)
+                                                        
+                                                        //self.adapter.performUpdates(animated: true, completion: nil)
+                                                    }
+                                                })
+                                            }
+                                        })
+                                    }
+                                })
+                            }
+                            break
+                        case "TRUEFALSE": break
+                        case "VERSUS": break
+                        default: break
+                        }
+                    }
+                }
+            }
+        })
+        DataBaseRef.removeAllObservers()
+    }
+    
+    // MARK: - ALL SOLVED
+    fileprivate func getQuestionsSolvedByCurrentUser() {
+        
+        Generator_.classicTriviaPosts.removeAll()
+        Generator_.trueFalsePosts.removeAll()
+        Generator_.versusPosts.removeAll()
+        
+        // add child scan
         dataBaseHandle = Database.database().reference().child("posts").observe(.childAdded, with: { (snapshot) -> Void in
+            // get snapshot value
             if let retrievedQuestion = snapshot.value as? [String : Any] {
+                //if snapshot value has quizType propertie
                 if let type = retrievedQuestion["quizType"] as? String {
                     switch type {
+                    // if question Type is CLassic
                     case "CLASSIC":
+                        // if this question has users who solved it
                         if let usersWhoFinishedThisQuestion = retrievedQuestion["usersAnswerRight"] as? [String : Any] {
+                            // if current user solved this question already we go out
                             if let _ = usersWhoFinishedThisQuestion[self.uid] as? Bool {
-                                break
-                            }
-                        }
-                        if let header = retrievedQuestion["questionHeader"] as? String, let answer1 = retrievedQuestion["answer1"] as? String, let answer2 = retrievedQuestion["answer2"] as? String, let answer3 = retrievedQuestion["answer3"] as? String, let answer4 = retrievedQuestion["answer4"] as? String, let rightAnswer = retrievedQuestion["rightAnswer"] as? String, let pathToImage = retrievedQuestion["pathToImage"] as? String, let dateString = retrievedQuestion["date"] as? String, let postID = retrievedQuestion["postID"] as? String {
-                            
-                            
-                            let formatter = DateFormatter()
-                            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                            let date = formatter.date(from: dateString)!
-                            //url only latin symbols
-                            let urlToImage = URL(string: pathToImage)
-                            guard urlToImage != nil else {
-                                print("BAD URL LINK !!!!!!!")
-                                return }
-                            /////////////////
-                            cache.retrieveImage(forKey: pathToImage, options: nil, completionHandler: { (image_, cacheType) in
-                                if let image_ = image_ {
-                                    //print("EXIST in cache.")
-                                    //CIRCLE PROGRESS
-                                    //progress.angle = self.addToStartValue(add: 360/self.retrievedCount)
+                                
+                                if let header = retrievedQuestion["questionHeader"] as? String, let answer1 = retrievedQuestion["answer1"] as? String, let answer2 = retrievedQuestion["answer2"] as? String, let answer3 = retrievedQuestion["answer3"] as? String, let answer4 = retrievedQuestion["answer4"] as? String, let rightAnswer = retrievedQuestion["rightAnswer"] as? String, let pathToImage = retrievedQuestion["pathToImage"] as? String, let dateString = retrievedQuestion["date"] as? String, let postID = retrievedQuestion["postID"] as? String {
                                     
-                                    print("EXIST IN CACHE")
-                                    /*** if image in Cach make new TheFightersQuestion object ****/
                                     
-                                    let classic = ClassicTrivia(image: image_, questionTitle: header, rightAnswer: rightAnswer, date: date, answer1: answer1, answer2: answer2, answer3: answer3, answer4: answer4, isLikedByCurrentUser: false, postID: postID)
-                                    
-                                    Generator_.classicTriviaPosts.append(classic)
-                                    
-                                    //if question more than one
-                                } else {    /*** No Cached ****/
-                                    print("NOT exist in cache.")
-                                    /*** if no in Cache we download ****/
-                                    downloader.downloadImage(with: urlToImage!, options: nil, progressBlock: nil, completionHandler: { (image, error, url, originalData) in
-                                        if error != nil {
-                                            print(error!.localizedDescription)
-                                            self.noInternetConnectionError()
-                                            /***/ //MARK: - !<esli zagruzit ne udalos to...>!
-                                        }
-                                        /*** if image download suceed cache it and make new TheFightersQuestion object ****/
-                                        if let image = image {
-                                            print("NEW IMAGE DOWNLOADED")
+                                    let formatter = DateFormatter()
+                                    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                                    let date = formatter.date(from: dateString)!
+                                    //url only latin symbols
+                                    let urlToImage = URL(string: pathToImage)
+                                    guard urlToImage != nil else {
+                                        print("BAD URL LINK !!!!!!!")
+                                        return }
+                                    /////////////////
+                                    cache.retrieveImage(forKey: pathToImage, options: nil, completionHandler: { (image_, cacheType) in
+                                        if let image_ = image_ {
+                                            //print("EXIST in cache.")
                                             //CIRCLE PROGRESS
                                             //progress.angle = self.addToStartValue(add: 360/self.retrievedCount)
                                             
-                                            cache.store(image, forKey: pathToImage)
+                                            print("EXIST IN CACHE")
+                                            /*** if image in Cach make new TheFightersQuestion object ****/
                                             
-                                            let classic = ClassicTrivia(image: image, questionTitle: header, rightAnswer: rightAnswer, date: date, answer1: answer1, answer2: answer2, answer3: answer3, answer4: answer4, isLikedByCurrentUser: false, postID: postID)
+                                            let classic = ClassicTrivia(image: image_, questionTitle: header, rightAnswer: rightAnswer, date: date, answer1: answer1, answer2: answer2, answer3: answer3, answer4: answer4, isLikedByCurrentUser: false, postID: postID)
+                                            
                                             Generator_.classicTriviaPosts.append(classic)
                                             
-                                            //self.adapter.performUpdates(animated: true, completion: nil)
+                                            //if question more than one
+                                        } else {    /*** No Cached ****/
+                                            print("NOT exist in cache.")
+                                            /*** if no in Cache we download ****/
+                                            downloader.downloadImage(with: urlToImage!, options: nil, progressBlock: nil, completionHandler: { (image, error, url, originalData) in
+                                                if error != nil {
+                                                    print(error!.localizedDescription)
+                                                    self.noInternetConnectionError()
+                                                    /***/ //MARK: - !<esli zagruzit ne udalos to...>!
+                                                }
+                                                /*** if image download suceed cache it and make new TheFightersQuestion object ****/
+                                                if let image = image {
+                                                    print("NEW IMAGE DOWNLOADED")
+                                                    //CIRCLE PROGRESS
+                                                    //progress.angle = self.addToStartValue(add: 360/self.retrievedCount)
+                                                    
+                                                    cache.store(image, forKey: pathToImage)
+                                                    
+                                                    let classic = ClassicTrivia(image: image, questionTitle: header, rightAnswer: rightAnswer, date: date, answer1: answer1, answer2: answer2, answer3: answer3, answer4: answer4, isLikedByCurrentUser: false, postID: postID)
+                                                    Generator_.classicTriviaPosts.append(classic)
+                                                    
+                                                    //self.adapter.performUpdates(animated: true, completion: nil)
+                                                }
+                                            })
                                         }
                                     })
+                                    
+                                    
+                                    /*** if no in Cache we download ****/
+                                    break
                                 }
-                            })
-                            
-                            
-                            /*** if no in Cache we download ****/
-                            break
+                                
+                                break
+                            }
                         }
+                        
                     case "TRUEFALSE": break
                     case "VERSUS": break
                     default: break
@@ -219,8 +491,13 @@ class CollectionViewController: UIViewController {
             }
         })
     }
-    
-    fileprivate func getWithoutFinishedQuestions() {
+    // MARK: - ALL NOT SOLVED
+    fileprivate func getQuestionsNotSolvedByCurrentUser() {
+        
+        Generator_.classicTriviaPosts.removeAll()
+        Generator_.trueFalsePosts.removeAll()
+        Generator_.versusPosts.removeAll()
+        
         dataBaseHandle = Database.database().reference().child("posts").observe(.childAdded, with: { (snapshot) -> Void in
             if let retrievedQuestion = snapshot.value as? [String : Any] {
                 if let type = retrievedQuestion["quizType"] as? String {
@@ -229,7 +506,7 @@ class CollectionViewController: UIViewController {
                         if let header = retrievedQuestion["questionHeader"] as? String, let answer1 = retrievedQuestion["answer1"] as? String, let answer2 = retrievedQuestion["answer2"] as? String, let answer3 = retrievedQuestion["answer3"] as? String, let answer4 = retrievedQuestion["answer4"] as? String, let rightAnswer = retrievedQuestion["rightAnswer"] as? String, let pathToImage = retrievedQuestion["pathToImage"] as? String, let dateString = retrievedQuestion["date"] as? String, let postID = retrievedQuestion["postID"] as? String {
                             
                             if let usersWhoFinishedThisQuestion = retrievedQuestion["usersAnswerRight"] as? [String : Any] {
-                               if let _ = usersWhoFinishedThisQuestion[self.uid] as? Bool {
+                                if let _ = usersWhoFinishedThisQuestion[self.uid] as? Bool {
                                     break
                                 }
                             }
@@ -295,8 +572,89 @@ class CollectionViewController: UIViewController {
             }
         })
     }
+    // MARK: - GET ALL
+    fileprivate func getAllQuestionsFromServer() {
+        
+        Generator_.classicTriviaPosts.removeAll()
+        Generator_.trueFalsePosts.removeAll()
+        Generator_.versusPosts.removeAll()
+        
+        DataBaseWithPosts.queryOrderedByKey().observeSingleEvent(of: .value, with: { (snapshot) in
+            let questions = snapshot.value as! [String : AnyObject]
+            
+            for(_, value) in questions {
+                
+                if let retrievedQuestion = value as? [String : Any] {
+                    
+                    if let type = retrievedQuestion["quizType"] as? String {
+                        switch type {
+                        case "CLASSIC":
+                            
+                            if let header = retrievedQuestion["questionHeader"] as? String, let answer1 = retrievedQuestion["answer1"] as? String, let answer2 = retrievedQuestion["answer2"] as? String, let answer3 = retrievedQuestion["answer3"] as? String, let answer4 = retrievedQuestion["answer4"] as? String, let rightAnswer = retrievedQuestion["rightAnswer"] as? String, let pathToImage = retrievedQuestion["pathToImage"] as? String, let dateString = retrievedQuestion["date"] as? String {
+                                let formatter = DateFormatter()
+                                formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                                let date = formatter.date(from: dateString)!
+                                //url only latin symbols
+                                let urlToImage = URL(string: pathToImage)
+                                guard urlToImage != nil else {
+                                    AppDelegate.instance().showAlert(title: "Error", msg: "Bad URL")
+                                    return
+                                }
+                                /////////////////
+                                cache.retrieveImage(forKey: pathToImage, options: nil, completionHandler: { (image_, cacheType) in
+                                    if let image_ = image_ {
+                                        //CIRCLE PROGRESS
+                                        //progress.angle = self.addToStartValue(add: 360/self.retrievedCount)
+                                        
+                                        print("questionType: CLASSIC, header: \(header), rightAnswer: \(rightAnswer):::EXIST IN CACHE")
+                                        /*** if image in Cach make new TheFightersQuestion object ****/
+                                        
+                                        let classic = ClassicTrivia(image: image_, questionTitle: header, rightAnswer: rightAnswer, date: date, answer1: answer1, answer2: answer2, answer3: answer3, answer4: answer4)
+                                        
+                                        Generator_.classicTriviaPosts.append(classic)
+                                        
+                                        //if question more than one
+                                    } else {    /*** No Cached ****/
+                                        print("Current question Image doesn't exist in cache. Start downloading....")
+                                        downloader.downloadImage(with: urlToImage!, options: nil, progressBlock: nil, completionHandler: { (image, error, url, originalData) in
+                                            if error != nil {
+                                                print(error!.localizedDescription)
+                                                self.noInternetConnectionError()
+                                            }
+                                            /*** if image download suceed cache it and make new Question object ****/
+                                            if let image = image {
+                                                print("NEW IMAGE DOWNLOADED")
+                                                //CIRCLE PROGRESS
+                                                //progress.angle = self.addToStartValue(add: 360/self.retrievedCount)
+                                                cache.store(image, forKey: pathToImage)
+                                                let classic = ClassicTrivia(image: image, questionTitle: header, rightAnswer: rightAnswer, date: date, answer1: answer1, answer2: answer2, answer3: answer3, answer4: answer4)
+                                                Generator_.classicTriviaPosts.append(classic)
+                                                //self.adapter.performUpdates(animated: true, completion: nil)
+                                            }
+                                        })
+                                    }
+                                })
+                                break
+                            }
+                        case "TRUEFALSE": break
+                        case "VERSUS": break
+                        default: break
+                        }
+                    }
+                }
+            }
+        })
+        DataBaseRef.removeAllObservers()
+    }
     
-    fileprivate func spectateHotQuestionsOnServer() {
+    
+    // MARK: - GET OLD AND LISTEN FOR NEW
+    fileprivate func listenForHotQuestionsOnServer() {
+        
+        Generator_.classicTriviaPosts.removeAll()
+        Generator_.trueFalsePosts.removeAll()
+        Generator_.versusPosts.removeAll()
+        
         dataBaseHandle = Database.database().reference().child("posts").observe(.childAdded, with: { (snapshot) -> Void in
             if let retrievedQuestion = snapshot.value as? [String : Any] {
                 if let type = retrievedQuestion["quizType"] as? String {
@@ -323,7 +681,7 @@ class CollectionViewController: UIViewController {
                                     /*** if image in Cach make new TheFightersQuestion object ****/
                                     
                                     let classic = ClassicTrivia(image: image_, questionTitle: header, rightAnswer: rightAnswer, date: date, answer1: answer1, answer2: answer2, answer3: answer3, answer4: answer4, isLikedByCurrentUser: false, postID: postID)
-
+                                    
                                     Generator_.classicTriviaPosts.append(classic)
                                     
                                     //if question more than one
@@ -366,170 +724,25 @@ class CollectionViewController: UIViewController {
         })
     }
     
-    fileprivate func getQuestionsFromServerOrCache() {
-        
-        DataBaseWithPosts.queryOrderedByKey().observeSingleEvent(of: .value, with: { (snapshot) in
-            let questions = snapshot.value as! [String : AnyObject]
-            var count = 0
-            
-            for(_, value) in questions {
-                
-                if let retrievedQuestion = value as? [String : Any] {
-                    
-                    if let type = retrievedQuestion["quizType"] as? String {
-                        switch type {
-                        case "CLASSIC":
-                            
-                            if let header = retrievedQuestion["questionHeader"] as? String, let answer1 = retrievedQuestion["answer1"] as? String, let answer2 = retrievedQuestion["answer2"] as? String, let answer3 = retrievedQuestion["answer3"] as? String, let answer4 = retrievedQuestion["answer4"] as? String, let rightAnswer = retrievedQuestion["rightAnswer"] as? String, let pathToImage = retrievedQuestion["pathToImage"] as? String, let dateString = retrievedQuestion["date"] as? String {
-                                let formatter = DateFormatter()
-                                formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                                let date = formatter.date(from: dateString)!
-                                print(count += 1)
-                                //url only latin symbols
-                                let urlToImage = URL(string: pathToImage)
-                                guard urlToImage != nil else {
-                                    print("BAD URL LINK !!!!!!!")
-                                    return }
-                                /////////////////
-                                cache.retrieveImage(forKey: pathToImage, options: nil, completionHandler: { (image_, cacheType) in
-                                    if let image_ = image_ {
-                                        //print("EXIST in cache.")
-                                        //CIRCLE PROGRESS
-                                        count += 1
-                                        print(count)
-                                        //progress.angle = self.addToStartValue(add: 360/self.retrievedCount)
-                                        
-                                        print("EXIST IN CACHE")
-                                        /*** if image in Cach make new TheFightersQuestion object ****/
-                                        
-                                        let classic = ClassicTrivia(image: image_, questionTitle: header, rightAnswer: rightAnswer, date: date, answer1: answer1, answer2: answer2, answer3: answer3, answer4: answer4)
-                                        
-                                        Generator_.classicTriviaPosts.append(classic)
-                                        
-                                        //if question more than one
-                                    } else {    /*** No Cached ****/
-                                        print("NOT exist in cache.")
-                                        /*** if no in Cache we download ****/
-                                        downloader.downloadImage(with: urlToImage!, options: nil, progressBlock: nil, completionHandler: { (image, error, url, originalData) in
-                                            if error != nil {
-                                                print(error!.localizedDescription)
-                                                self.noInternetConnectionError()
-                                                /***/ //MARK: - !<esli zagruzit ne udalos to...>!
-                                            }
-                                            /*** if image download suceed cache it and make new TheFightersQuestion object ****/
-                                            if let image = image {
-                                                print("NEW IMAGE DOWNLOADED")
-                                                //CIRCLE PROGRESS
-                                                //progress.angle = self.addToStartValue(add: 360/self.retrievedCount)
-                                                
-                                                cache.store(image, forKey: pathToImage)
-                                                
-                                                let classic = ClassicTrivia(image: image, questionTitle: header, rightAnswer: rightAnswer, date: date, answer1: answer1, answer2: answer2, answer3: answer3, answer4: answer4)
-                                                
-                                                Generator_.classicTriviaPosts.append(classic)
-                                                
-                                                //self.adapter.performUpdates(animated: true, completion: nil)
-                                            }
-                                        })
-                                    }
-                                })
-                                
-                                
-                                /*** if no in Cache we download ****/
-                                break
-                            }
-                        case "TRUEFALSE": break
-                        case "VERSUS": break
-                        default: break
-                        }
-                    }
-                }
-            }
-        })
-        DataBaseRef.removeAllObservers()
-    }
-    
-    
-    fileprivate func retrieveOrDownloadQuestions(totalCount: Int) {
-        DataBaseWithPosts.queryOrderedByKey().observeSingleEvent(of: .value, with: { (snapshot) in
-            let questions = snapshot.value as! [String : AnyObject]
-            var count = 0
-            
-            for(_, value) in questions {
-                
-                if let retrievedQuestion = value as? [String : Any] {
-                    
-                    if let type = retrievedQuestion["quizType"] as? String {
-                        switch type {
-                        case "CLASSIC":
-                            
-                            if let header = retrievedQuestion["questionHeader"] as? String, let answer1 = retrievedQuestion["answer1"] as? String, let answer2 = retrievedQuestion["answer2"] as? String, let answer3 = retrievedQuestion["answer3"] as? String, let answer4 = retrievedQuestion["answer4"] as? String, let rightAnswer = retrievedQuestion["rightAnswer"] as? String, let pathToImage = retrievedQuestion["pathToImage"] as? String, let dateString = retrievedQuestion["date"] as? String {
-                                let formatter = DateFormatter()
-                                formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                                let date = formatter.date(from: dateString)!
-                                print(count += 1)
-                                //url only latin symbols
-                                let urlToImage = URL(string: pathToImage)
-                                guard urlToImage != nil else {
-                                    print("BAD URL LINK !!!!!!!")
-                                    return }
-                                
-                                let classic = ClassicTrivia_new(imagePath: pathToImage, image: nil, questionTitle: header, rightAnswer: rightAnswer, date: date, answer1: answer1, answer2: answer2, answer3: answer3, answer4: answer4)
-                                
-                                //Generator_.classicTriviaPosts.append(classic)
-                                /*** if no in Cache we download ****/
-                                //                                downloader.downloadImage(with: urlToImage!, options: nil, progressBlock: nil, completionHandler: { (image, error, url, originalData) in
-                                //                                    if error != nil {
-                                //                                        print(error!.localizedDescription)
-                                //                                        self.noInternetConnectionError()
-                                //                                        /***/ //MARK: - !<esli zagruzit ne udalos to...>!
-                                //                                    }
-                                //                                    /*** if image download suceed cache it and make new TheFightersQuestion object ****/
-                                //                                    if let image = image {
-                                //                                        print("NEW IMAGE DOWNLOADED")
-                                //                                        //CIRCLE PROGRESS
-                                //                                        //progress.angle = self.addToStartValue(add: 360/self.retrievedCount)
-                                //
-                                //                                        cache.store(image, forKey: pathToImage)
-                                //
-                                //                                        let classic = ClassicTrivia_new(imagePath: pathToImage, image: nil, questionTitle: header, rightAnswer: rightAnswer, date: date, answer1: answer1, answer2: answer2, answer3: answer3, answer4: answer4)
-                                //
-                                //                                        Generator_.classicTriviaPosts.append(classic)
-                                //
-                                //                                        //self.adapter.performUpdates(animated: true, completion: nil)
-                                //                                        //questionCount > 1 because there is default non-question value in database
-                                //                                        questionsCount > 1 ? questionsCount -= 1 : self.downLoadComplete()
-                                //                                    }
-                                //                                })
-                                break
-                            }
-                        case "TRUEFALSE": break
-                        case "VERSUS": break
-                        default: break
-                        }
-                    }
-                }
-            }
-        })
-        DataBaseWithPosts.removeAllObservers()
-    }
+
     
     fileprivate func noInternetConnectionError() {
-        
+        AppDelegate.instance().showAlert(title: "No connection", msg: "Please, check your internet connection")
     }
     
+    // MARK: - IBActions
     
-    @IBAction func addPressed(_ sender: UIButton) {
-        getQuestionsFromServerOrCache()
+    @IBAction func showAllQuestions(_ sender: UIButton) {
+        getQuestionsNotSolvedByCurrentUser()
     }
-    
-    @IBAction func plusPressed(_ sender: UIButton) {
-        
-        Generator_.trueFalsePosts.append(TrueFalse(UIImage(named: "1")!, "Is it photoalbum? 1", true, Date(timeIntervalSinceNow: -100)))
-        self.adapter.performUpdates(animated: true, completion: nil)
-        
-        //        Generator_.versusPosts.append(Versus(header: "Select hottest one", image1: UIImage(named:"1")!, image2: UIImage(named:"2")!, date: Date(timeIntervalSinceNow: 12)))
-        //        adapter.performUpdates(animated: true, completion: nil)
+    @IBAction func showQuestionsLikedByCurrentUser(_ sender: UIButton) {
+        getQuestionLikedByCurrentUser()
+    }
+    @IBAction func showMostLikedQuestions(_ sender: UIButton) {
+        getMostLikedQuestions()
+    }
+    @IBAction func showCurrentUserSolvedQuestion(_ sender: UIButton) {
+        getQuestionsSolvedByCurrentUser()
     }
     
     @IBAction func showMenuAction(_ sender: UIButton) {

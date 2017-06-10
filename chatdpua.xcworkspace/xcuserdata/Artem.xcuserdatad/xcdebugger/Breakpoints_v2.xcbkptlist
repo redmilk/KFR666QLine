@@ -9,13 +9,13 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "chatdpua/ClassicTriviaCell.swift"
-            timestampString = "518708340.169527"
+            filePath = "chatdpua/ClassicTriviaSectionCtrl.swift"
+            timestampString = "518730856.545884"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "78"
-            endingLineNumber = "78"
-            landmarkName = "updateDatabaseIfRight()"
+            startingLineNumber = "21"
+            endingLineNumber = "21"
+            landmarkName = "listAdapter(_:willDisplay:cell:at:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
